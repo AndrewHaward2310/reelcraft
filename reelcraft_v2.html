@@ -1,0 +1,3368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reelcraft — Product Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0b0e;
+    --bg-1:      #101218;
+    --bg-2:      #161922;
+    --bg-3:      #1c2030;
+    --bg-4:      #232838;
+    --line:      #232838;
+    --line-2:    #2a3046;
+    --ink:       #f0eee9;
+    --ink-2:     #c8c5bd;
+    --ink-3:     #8b8a85;
+    --ink-4:     #5a5a57;
+    --ink-5:     #3a3a38;
+    --accent:    #d4a574;
+    --accent-2:  #e8b76e;
+    --accent-d:  #8a6d4a;
+    --green:     #7ab586;
+    --blue:      #6e8ec4;
+    --red:       #d97e6e;
+    --purple:    #a08fc4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+  .mono  { font-family: 'Geist Mono', monospace; }
+
+  h1, h2, h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  h4, h5, h6 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section { padding: 120px 0; }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 32px;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 11, 14, 0.7);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 500;
+    font-size: 19px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 22px; height: 22px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: relative;
+  }
+  .brand-mark::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .topnav {
+    display: flex; gap: 28px; align-items: center;
+    font-size: 13px;
+  }
+  .topnav a {
+    color: var(--ink-3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .topnav a:hover { color: var(--ink); }
+  .topnav .doc-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-4);
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 140px 32px 80px;
+    position: relative;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 20%, rgba(212, 165, 116, 0.06), transparent 70%);
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 1;
+    margin-bottom: 28px;
+    max-width: 1000px;
+    letter-spacing: -0.035em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-lead {
+    max-width: 600px;
+    font-size: 17px;
+    color: var(--ink-2);
+    margin-bottom: 56px;
+    line-height: 1.5;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 64px;
+    max-width: 880px;
+  }
+  .hero-stat .v {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    color: var(--ink);
+  }
+  .hero-stat .v em { color: var(--accent); font-style: italic; }
+  .hero-stat .l {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-4);
+    margin-top: 4px;
+  }
+
+  /* ============ SECTION HEAD ============ */
+  .sec-head {
+    margin-bottom: 56px;
+    max-width: 880px;
+  }
+  .sec-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sec-num::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--accent);
+  }
+  .sec-head h2 {
+    font-size: clamp(34px, 4.5vw, 56px);
+    margin-bottom: 18px;
+    letter-spacing: -0.025em;
+  }
+  .sec-head h2 em { font-style: italic; color: var(--accent); }
+  .sec-head .lead {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 680px;
+    line-height: 1.6;
+  }
+
+  /* ============ APP MOCKUP — base styles ============ */
+  .app {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+  .app-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .app-titlebar .dots { display: flex; gap: 6px; }
+  .app-titlebar .dots span {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--bg-4);
+  }
+  .app-titlebar .url {
+    flex: 1;
+    text-align: center;
+    color: var(--ink-3);
+  }
+  .app-titlebar .url strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .app-titlebar .toolbar-icons {
+    display: flex;
+    gap: 8px;
+    color: var(--ink-4);
+  }
+
+  /* App body */
+  .app-body {
+    display: grid;
+    min-height: 580px;
+  }
+  .app-body.with-sidebar { grid-template-columns: 220px 1fr; }
+  .app-body.with-sidebar-right { grid-template-columns: 220px 1fr 280px; }
+  .app-body.split { grid-template-columns: 1fr 1fr; }
+  .app-body.split-3 { grid-template-columns: 1fr 2fr 1fr; }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--bg-1);
+    border-right: 1px solid var(--line);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar-section {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-4);
+    padding: 12px 10px 6px;
+    margin-top: 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-item:hover { background: var(--bg-2); }
+  .nav-item.active {
+    background: var(--bg-3);
+    color: var(--ink);
+  }
+  .nav-item .ico {
+    width: 14px; height: 14px;
+    color: var(--ink-3);
+  }
+  .nav-item.active .ico { color: var(--accent); }
+  .nav-item .badge {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    background: var(--bg-3);
+    padding: 1px 6px;
+    border-radius: 8px;
+  }
+  .nav-item.active .badge {
+    background: rgba(212, 165, 116, 0.15);
+    color: var(--accent-2);
+  }
+
+  /* Main content */
+  .main-area {
+    padding: 24px 28px;
+    background: var(--bg-1);
+    overflow: hidden;
+  }
+  .right-panel {
+    border-left: 1px solid var(--line);
+    background: var(--bg-1);
+    padding: 20px;
+  }
+
+  /* Sub-header (top of main area) */
+  .sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  .sub-header h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .sub-header .crumb {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-4);
+  }
+  .sub-header .actions {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    font-family: 'Geist', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 13px;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--ink-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--bg-3); }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .btn.primary:hover { background: var(--accent-2); }
+  .btn .ico { width: 13px; height: 13px; }
+
+  /* Pills / tags */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg-3);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+  }
+  .pill.accent {
+    background: rgba(212, 165, 116, 0.1);
+    border-color: rgba(212, 165, 116, 0.3);
+    color: var(--accent-2);
+  }
+  .pill.green {
+    background: rgba(122, 181, 134, 0.1);
+    border-color: rgba(122, 181, 134, 0.3);
+    color: var(--green);
+  }
+  .pill.blue {
+    background: rgba(110, 142, 196, 0.1);
+    border-color: rgba(110, 142, 196, 0.3);
+    color: var(--blue);
+  }
+  .pill .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* Annotation labels — UI feature callouts */
+  .annot {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .annot-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--bg);
+    padding: 5px 9px;
+    border: 1px solid rgba(212, 165, 116, 0.4);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .annot-line {
+    width: 36px; height: 1px;
+    background: var(--accent-d);
+    border-top: 1px dashed var(--accent);
+  }
+
+  /* ============ MODULE SECTION LAYOUT ============ */
+  .module-section {
+    padding: 90px 0;
+  }
+  .module-section.dark { background: var(--bg); }
+  .module-section.darker { background: var(--bg-1); }
+
+  .module-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 40px;
+  }
+  .module-head .left .tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .module-head .left h3 {
+    font-size: clamp(28px, 3.5vw, 44px);
+    margin-bottom: 12px;
+    letter-spacing: -0.025em;
+  }
+  .module-head .left h3 em { font-style: italic; color: var(--accent); }
+  .module-head .right p {
+    color: var(--ink-3);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .feature-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .feat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .feat .feat-no {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+  .feat .feat-name {
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .feat .feat-desc {
+    font-size: 12px;
+    color: var(--ink-3);
+    line-height: 1.5;
+  }
+
+  /* App-mockup container */
+  .app-wrap {
+    position: relative;
+  }
+
+  /* ============ STORY EDITOR specific ============ */
+  .scene-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .scene-item {
+    padding: 9px 11px;
+    border-radius: 5px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .scene-item:hover { background: var(--bg-2); }
+  .scene-item.active {
+    background: var(--bg-2);
+    border-left-color: var(--accent);
+  }
+  .scene-item .scene-no {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+  }
+  .scene-item .scene-title {
+    color: var(--ink-2);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .scene-item.active .scene-title { color: var(--ink); }
+
+  .script-doc {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    padding: 20px;
+    background: var(--bg-2);
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    max-height: 380px;
+    overflow: hidden;
+    position: relative;
+  }
+  .script-doc::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 80px;
+    background: linear-gradient(transparent, var(--bg-2));
+    pointer-events: none;
+  }
+  .script-doc .scene-head {
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+  .script-doc .scene-head:first-child { margin-top: 0; }
+  .script-doc .character {
+    color: var(--ink);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-left: 80px;
+  }
+  .script-doc .dialogue {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .script-doc .action { color: var(--ink-3); font-style: italic; }
+  .script-doc .parens {
+    color: var(--ink-4);
+    margin-left: 60px;
+    font-size: 11px;
+  }
+
+  /* AI Assist panel */
+  .ai-panel {
+    background: var(--bg-2);
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ai-msg {
+    font-size: 12px;
+    line-height: 1.55;
+    padding: 12px;
+    border-radius: 6px;
+  }
+  .ai-msg.user {
+    background: var(--bg-3);
+    color: var(--ink-2);
+  }
+  .ai-msg.ai {
+    background: rgba(212, 165, 116, 0.06);
+    border: 1px solid rgba(212, 165, 116, 0.2);
+    color: var(--ink-2);
+  }
+  .ai-msg .role {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .ai-msg.user .role { color: var(--ink-4); }
+  .ai-msg.ai .role { color: var(--accent); }
+  .ai-suggest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .ai-suggest .chip {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: var(--bg-3);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .ai-input {
+    margin-top: auto;
+    padding: 10px 12px;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--ink-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ============ STORYBOARD specific ============ */
+  .storyboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .frame-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .frame-card:hover { border-color: var(--ink-3); }
+  .frame-card.selected { border-color: var(--accent); }
+  .frame-thumb {
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+  }
+  .frame-thumb svg { width: 100%; height: 100%; display: block; }
+  .frame-thumb .frame-no {
+    position: absolute;
+    top: 6px; left: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .frame-thumb .frame-tag {
+    position: absolute;
+    bottom: 6px; right: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--accent-2);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(212, 165, 116, 0.3);
+  }
+  .frame-meta {
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    border-top: 1px solid var(--line);
+  }
+  .frame-meta strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 2px;
+    font-size: 12px;
+  }
+
+  /* ============ CHARACTER VAULT specific ============ */
+  .char-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .char-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+  }
+  .char-portrait {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    border: 2px solid var(--line);
+    position: relative;
+  }
+  .char-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .char-role {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  .char-stats {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .char-stat .v {
+    font-family: 'Instrument Serif', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .char-stat .l {
+    font-family: 'Geist Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ============ RENDER QUEUE specific ============ */
+  .queue-table {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .queue-header {
+    display: grid;
+    grid-template-columns: 44px 2fr 1fr 1fr 1.5fr 1fr 70px;
+    gap: 16px;
+    padding: 10px 16px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-4);
+  }
+  .queue-row {
+    display: grid;
+    grid-template-columns: 44px 2fr 1fr 1fr 1.5fr 1fr 70px;
+    gap: 16px;
+    padding: 12px 16px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .queue-row:last-child { border-bottom: none; }
+  .queue-row:hover { background: var(--bg-3); }
+  .queue-thumb {
+    aspect-ratio: 16/9;
+    width: 44px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #2a2c38, #1a1c24);
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .queue-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(212, 165, 116, 0.2), transparent 60%);
+  }
+  .queue-title strong {
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+  }
+  .queue-title .scene-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-4);
+    margin-top: 2px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 2px;
+  }
+  .progress-bar.complete .fill { background: var(--green); }
+  .progress-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 4px;
+  }
+
+  /* ============ VOICE STUDIO specific ============ */
+  .voice-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 16px;
+    min-height: 380px;
+  }
+  .voice-col {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .voice-col h6 {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .voice-option {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 4px;
+  }
+  .voice-option:hover { background: var(--bg-3); }
+  .voice-option.active {
+    background: rgba(212, 165, 116, 0.08);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+  }
+  .voice-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg-4);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .voice-meta strong {
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+  }
+  .voice-meta .vsub {
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .voice-play-btn {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg-3);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--line);
+  }
+  .voice-option.active .voice-play-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  /* Waveform */
+  .waveform {
+    background: var(--bg-3);
+    border-radius: 6px;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .wave-canvas {
+    height: 120px;
+    background: var(--bg-2);
+    border-radius: 4px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .wave-bar {
+    flex: 1;
+    background: var(--accent);
+    opacity: 0.4;
+    border-radius: 1px;
+    transition: opacity 0.2s;
+  }
+  .wave-bar.played { opacity: 0.9; }
+  .wave-playhead {
+    position: absolute;
+    top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .wave-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .wave-time { color: var(--ink); font-weight: 500; }
+
+  .dialogue-line {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-2);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  .dialogue-line .char-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--bg-4);
+    border: 1px solid var(--line);
+  }
+  .dialogue-line .char-dot.lan { background: linear-gradient(135deg, #c44d3a, #8a3522); }
+  .dialogue-line .char-dot.minh { background: linear-gradient(135deg, #4a7c7e, #2d5b5d); }
+  .dialogue-line .char-dot.narr { background: linear-gradient(135deg, #d4a574, #8a6d4a); }
+  .dialogue-line .ch-name {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .dialogue-line .ch-line {
+    color: var(--ink-2);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* ============ TIMELINE specific ============ */
+  .timeline-app {
+    background: var(--bg-1);
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    padding: 20px;
+  }
+  .timeline-preview {
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a1c28 0%, #0e1018 100%);
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .timeline-preview .preview-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .timeline-preview .preview-overlay {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--ink);
+    width: 80%;
+  }
+  .preview-overlay .subtitle {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 15px;
+    display: inline-block;
+    backdrop-filter: blur(4px);
+    border-bottom: 2px solid var(--accent);
+  }
+  .preview-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px; height: 56px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .preview-time {
+    position: absolute;
+    bottom: 8px; right: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-2);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .timeline-tracks {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px;
+  }
+  .track {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .track-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: right;
+    padding-right: 6px;
+  }
+  .track-area {
+    height: 28px;
+    background: var(--bg-3);
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    overflow: hidden;
+  }
+  .clip {
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-d));
+    border-radius: 2px;
+    border: 1px solid var(--accent);
+    position: relative;
+  }
+  .clip.video { background: linear-gradient(135deg, #6e8ec4, #4d6ba3); border-color: #6e8ec4; }
+  .clip.audio { background: linear-gradient(135deg, #7ab586, #5a956e); border-color: #7ab586; }
+  .clip.sub   { background: linear-gradient(135deg, #d4a574, #b88958); border-color: var(--accent); }
+  .clip.bgm   { background: linear-gradient(135deg, #a08fc4, #7d6ba3); border-color: #a08fc4; }
+  .clip.sfx   { background: linear-gradient(135deg, #d97e6e, #b56254); border-color: #d97e6e; opacity: 0.85; }
+
+  .playhead-marker {
+    position: absolute;
+    top: -16px;
+    width: 1px;
+    height: calc(100% + 16px);
+    background: var(--accent-2);
+    box-shadow: 0 0 6px var(--accent);
+    z-index: 10;
+    pointer-events: none;
+  }
+  .playhead-marker::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -5px;
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid var(--accent-2);
+  }
+
+  /* ============ SCHEDULER specific ============ */
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .sched-header {
+    padding: 10px 8px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+  .sched-header:last-child { border-right: none; }
+  .sched-header .day {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .sched-time {
+    padding: 12px 8px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    text-align: right;
+  }
+  .sched-cell {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    min-height: 60px;
+    padding: 4px;
+    position: relative;
+  }
+  .sched-cell:last-child { border-right: none; }
+  .sched-event {
+    background: var(--bg-3);
+    border-radius: 3px;
+    padding: 4px 6px;
+    border-left: 2px solid var(--accent);
+    font-size: 10px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    cursor: pointer;
+  }
+  .sched-event:hover { background: var(--bg-4); }
+  .sched-event.fb { border-left-color: var(--blue); }
+  .sched-event.tt { border-left-color: var(--red); }
+  .sched-event.yt { border-left-color: var(--red); }
+  .sched-event.ig { border-left-color: var(--purple); }
+  .sched-event strong {
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+  }
+  .sched-event .platform-meta {
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink-4);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 1px;
+  }
+
+  /* ============ ANALYTICS specific ============ */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .metric-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .metric-card .m-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+  }
+  .metric-card .m-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .metric-card .m-change {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .m-change.up { color: var(--green); }
+  .m-change.down { color: var(--red); }
+
+  .analytics-main {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+  }
+  .chart-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .chart-card h6 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+  .chart-card .chart-sub {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-4);
+    margin-bottom: 20px;
+  }
+  .top-eps {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .top-ep-row {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .top-ep-row:last-child { border-bottom: none; }
+  .top-ep-row .rank {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 18px;
+  }
+  .top-ep-row .ep-name {
+    color: var(--ink-2);
+  }
+  .top-ep-row .ep-views {
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  /* ============ WORKFLOW DIAGRAM ============ */
+  .flow-diagram {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 40px;
+  }
+  .flow-node {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px 14px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-node::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-4);
+    font-size: 14px;
+    z-index: 1;
+  }
+  .flow-node:last-child::after { display: none; }
+  .flow-node .flow-no {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+  }
+  .flow-node .flow-ico {
+    width: 28px; height: 28px;
+    margin: 0 auto 10px;
+    color: var(--accent);
+  }
+  .flow-node .flow-title {
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .flow-node .flow-desc {
+    font-size: 10px;
+    color: var(--ink-4);
+    line-height: 1.4;
+  }
+
+  /* ============ CLOSING ============ */
+  .closing {
+    padding: 140px 32px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 30%, rgba(212, 165, 116, 0.06), transparent 70%),
+      var(--bg);
+    position: relative;
+  }
+  .closing h2 {
+    font-size: clamp(40px, 6vw, 76px);
+    line-height: 1;
+    margin-bottom: 28px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    letter-spacing: -0.035em;
+  }
+  .closing h2 em { font-style: italic; color: var(--accent); }
+  .closing-lead {
+    color: var(--ink-2);
+    font-size: 17px;
+    max-width: 600px;
+    margin: 0 auto 56px;
+    line-height: 1.55;
+  }
+  .sig-row {
+    max-width: 720px;
+    margin: 80px auto 0;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: left;
+  }
+  .sig-block .l {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-4);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sig-block .v {
+    font-family: 'Instrument Serif', serif;
+    color: var(--ink);
+    font-size: 15px;
+  }
+
+  footer {
+    padding: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  .reveal-2 { animation-delay: 0.15s; }
+  .reveal-3 { animation-delay: 0.3s; }
+  .reveal-4 { animation-delay: 0.45s; }
+
+  /* SVG icon scale fix */
+  svg.ico { stroke-width: 1.5; }
+
+  @media (max-width: 1024px) {
+    .module-head { grid-template-columns: 1fr; gap: 20px; }
+    .app-body.with-sidebar-right { grid-template-columns: 1fr; }
+    .app-body.with-sidebar { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .right-panel { display: none; }
+    .voice-layout { grid-template-columns: 1fr; }
+    .feature-strip { grid-template-columns: repeat(2, 1fr); }
+    .storyboard-grid { grid-template-columns: repeat(2, 1fr); }
+    .char-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow-diagram { grid-template-columns: repeat(2, 1fr); }
+    .flow-node::after { display: none; }
+    .analytics-main { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    section { padding: 70px 0; }
+    .module-section { padding: 60px 0; }
+    .container { padding: 0 16px; }
+    .hero { padding: 110px 16px 60px; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .feature-strip { grid-template-columns: 1fr; }
+    .topnav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span>Reelcraft</span>
+  </div>
+  <div class="topnav">
+    <div class="nav-links" style="display:flex; gap:24px;">
+      <a href="#workspace">Workspace</a>
+      <a href="#story">Story</a>
+      <a href="#visual">Visual</a>
+      <a href="#voice">Voice</a>
+      <a href="#post">Post-prod</a>
+      <a href="#distribute">Distribute</a>
+      <a href="#analytics">Analytics</a>
+    </div>
+    <span class="doc-num">v1.1 · 2026</span>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="eyebrow reveal">Product Proposal</div>
+    <h1 class="reveal reveal-2">
+      Phim ngắn cho social,<br/>
+      sản xuất ở <em>quy mô studio</em>.
+    </h1>
+    <p class="hero-lead reveal reveal-3">
+      Reelcraft là một workspace AI hoàn chỉnh — viết kịch bản, dựng phim, lồng tiếng,
+      và đăng tự động lên Facebook. Một người vận hành, sản lượng của cả ekip.
+    </p>
+
+    <div class="hero-stats reveal reveal-4">
+      <div class="hero-stat">
+        <div class="v"><em>30–90</em> giây</div>
+        <div class="l">Thời lượng / Reels</div>
+      </div>
+      <div class="hero-stat">
+        <div class="v">1080p / 4K</div>
+        <div class="l">Chất lượng</div>
+      </div>
+      <div class="hero-stat">
+        <div class="v">9:16 · 1:1 · 16:9</div>
+        <div class="l">Aspect ratios</div>
+      </div>
+      <div class="hero-stat">
+        <div class="v"><em>10–50</em> video</div>
+        <div class="l">Sản lượng / ngày</div>
+      </div>
+    </div>
+
+    <!-- HERO PRODUCT SHOT — Main Workspace -->
+    <div class="app-wrap reveal reveal-4" id="workspace">
+      <div class="app">
+        <div class="app-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="url">reelcraft.studio  /  <strong>Workspace</strong></span>
+          <span class="mono">v1.1.0</span>
+        </div>
+        <div class="app-body with-sidebar-right">
+          <!-- Sidebar -->
+          <aside class="sidebar">
+            <div class="nav-item active">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              Tổng quan
+            </div>
+            <div class="sidebar-section">Series của tôi</div>
+            <div class="nav-item">
+              <span class="ico" style="width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#c44d3a,#8a3522);"></span>
+              Chuyện Phố Cổ
+              <span class="badge">12</span>
+            </div>
+            <div class="nav-item">
+              <span class="ico" style="width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#4a7c7e,#2d5b5d);"></span>
+              Đêm Sài Gòn
+              <span class="badge">08</span>
+            </div>
+            <div class="nav-item">
+              <span class="ico" style="width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#a08fc4,#7d6ba3);"></span>
+              Hồi Ức Hà Nội
+              <span class="badge">05</span>
+            </div>
+            <div class="nav-item">
+              <span class="ico" style="width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#d4a574,#8a6d4a);"></span>
+              Quán Trà Đá
+              <span class="badge">21</span>
+            </div>
+            <div class="sidebar-section">Tài nguyên</div>
+            <div class="nav-item">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+              Character Vault
+            </div>
+            <div class="nav-item">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12c0 5 4 9 9 9s9-4 9-9-4-9-9-9-9 4-9 9z"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18a13 13 0 0 1 0-18"/></svg>
+              Style Library
+            </div>
+            <div class="nav-item">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              BGM Library
+            </div>
+            <div class="nav-item">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Voice Cloning
+            </div>
+          </aside>
+
+          <!-- Main area -->
+          <main class="main-area">
+            <div class="sub-header">
+              <div>
+                <div class="crumb">Tổng quan / Tất cả series</div>
+                <h3>Buổi sáng tốt lành 👋</h3>
+              </div>
+              <div class="actions">
+                <div class="btn">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                  Tìm kiếm
+                </div>
+                <div class="btn primary">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Tập mới
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="metrics-row" style="margin-bottom: 24px;">
+              <div class="metric-card">
+                <div class="m-label">Tổng view tuần này</div>
+                <div class="m-value">2.4M</div>
+                <div class="m-change up">↗ +18.2%</div>
+              </div>
+              <div class="metric-card">
+                <div class="m-label">Tập đã đăng</div>
+                <div class="m-value">46</div>
+                <div class="m-change up">↗ +12 so với T.trước</div>
+              </div>
+              <div class="metric-card">
+                <div class="m-label">Đang render</div>
+                <div class="m-value">8</div>
+                <div class="m-change" style="color: var(--accent);">●  3 priority</div>
+              </div>
+              <div class="metric-card">
+                <div class="m-label">Tỉ lệ retention</div>
+                <div class="m-value">71%</div>
+                <div class="m-change up">↗ +4.1%</div>
+              </div>
+            </div>
+
+            <!-- Episode grid simulated -->
+            <h6 style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-4);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">Đang sản xuất</h6>
+            <div class="storyboard-grid" style="grid-template-columns: repeat(4, 1fr); gap: 12px;">
+              <div class="frame-card">
+                <div class="frame-thumb">
+                  <svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                    <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a2a20"/><stop offset="100%" stop-color="#1a0e08"/></linearGradient></defs>
+                    <rect width="160" height="90" fill="url(#g1)"/>
+                    <circle cx="50" cy="40" r="18" fill="#5a3a28" opacity="0.7"/>
+                    <rect x="0" y="65" width="160" height="25" fill="#0a0604" opacity="0.6"/>
+                    <circle cx="120" cy="25" r="3" fill="#d4a574" opacity="0.8"/>
+                    <circle cx="135" cy="35" r="2" fill="#d4a574" opacity="0.6"/>
+                  </svg>
+                  <div class="frame-no">EP 04</div>
+                  <div class="frame-tag">RENDER 67%</div>
+                </div>
+                <div class="frame-meta">
+                  <strong>Tiếng dương cầm tầng ba</strong>
+                  <span class="mono">Chuyện Phố Cổ · Veo 3.1</span>
+                </div>
+              </div>
+              <div class="frame-card">
+                <div class="frame-thumb">
+                  <svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                    <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a2840"/><stop offset="100%" stop-color="#0a121f"/></linearGradient></defs>
+                    <rect width="160" height="90" fill="url(#g2)"/>
+                    <path d="M0 60 Q40 50, 80 55 T160 55 L160 90 L0 90 Z" fill="#0a141f" opacity="0.8"/>
+                    <circle cx="100" cy="35" r="12" fill="#3a5a82" opacity="0.6"/>
+                    <line x1="0" y1="75" x2="160" y2="75" stroke="#4a6a94" stroke-width="0.5"/>
+                  </svg>
+                  <div class="frame-no">EP 03</div>
+                  <div class="frame-tag" style="border-color: rgba(122, 181, 134, 0.3); color: var(--green);">SẴN SÀNG</div>
+                </div>
+                <div class="frame-meta">
+                  <strong>Đường về Bến Thành</strong>
+                  <span class="mono">Đêm Sài Gòn · Kling 3.0</span>
+                </div>
+              </div>
+              <div class="frame-card">
+                <div class="frame-thumb">
+                  <svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                    <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a1838"/><stop offset="100%" stop-color="#180a1f"/></linearGradient></defs>
+                    <rect width="160" height="90" fill="url(#g3)"/>
+                    <ellipse cx="80" cy="45" rx="45" ry="15" fill="#3a2050" opacity="0.7"/>
+                    <circle cx="80" cy="42" r="8" fill="#7a5095" opacity="0.6"/>
+                    <rect x="0" y="0" width="160" height="20" fill="#0a040f" opacity="0.4"/>
+                  </svg>
+                  <div class="frame-no">EP 02</div>
+                  <div class="frame-tag" style="border-color: rgba(122, 181, 134, 0.3); color: var(--green);">SẴN SÀNG</div>
+                </div>
+                <div class="frame-meta">
+                  <strong>Bức ảnh trên gác xép</strong>
+                  <span class="mono">Hồi Ức Hà Nội · Sora 2 Pro</span>
+                </div>
+              </div>
+              <div class="frame-card">
+                <div class="frame-thumb">
+                  <svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                    <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a2418"/><stop offset="100%" stop-color="#15110a"/></linearGradient></defs>
+                    <rect width="160" height="90" fill="url(#g4)"/>
+                    <circle cx="80" cy="45" r="22" fill="#5a4520" opacity="0.7"/>
+                    <circle cx="80" cy="45" r="14" fill="#8a6d3a" opacity="0.8"/>
+                    <rect x="0" y="70" width="160" height="20" fill="#0a0805" opacity="0.7"/>
+                  </svg>
+                  <div class="frame-no">EP 22</div>
+                  <div class="frame-tag">SCRIPT</div>
+                </div>
+                <div class="frame-meta">
+                  <strong>Ấm trà của ông Sáu</strong>
+                  <span class="mono">Quán Trà Đá · Drafting</span>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Right Panel -->
+          <aside class="right-panel">
+            <h6 style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-4);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px;">Hoạt động gần đây</h6>
+
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;">
+                <div style="width:24px;height:24px;border-radius:50%;background:rgba(122, 181, 134, 0.15);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✓</div>
+                <div>
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;line-height:1.4;">EP 03 đăng thành công lên Facebook Page</div>
+                  <div class="mono" style="font-size:10px;color:var(--ink-4);margin-top:2px;">2 phút trước</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;">
+                <div style="width:24px;height:24px;border-radius:50%;background:rgba(212, 165, 116, 0.15);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">▶</div>
+                <div>
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;line-height:1.4;">EP 04 bắt đầu render shot 4/6</div>
+                  <div class="mono" style="font-size:10px;color:var(--ink-4);margin-top:2px;">8 phút trước</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;">
+                <div style="width:24px;height:24px;border-radius:50%;background:rgba(110, 142, 196, 0.15);color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✎</div>
+                <div>
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;line-height:1.4;">Kịch bản EP 22 vừa được AI hoàn thiện</div>
+                  <div class="mono" style="font-size:10px;color:var(--ink-4);margin-top:2px;">23 phút trước</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;">
+                <div style="width:24px;height:24px;border-radius:50%;background:rgba(160, 143, 196, 0.15);color:var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">♪</div>
+                <div>
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;line-height:1.4;">Voice clone "Cô Lan" đã train xong</div>
+                  <div class="mono" style="font-size:10px;color:var(--ink-4);margin-top:2px;">1 giờ trước</div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--line);margin:24px 0 16px;">
+
+            <h6 style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-4);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px;">Tập viral tuần này</h6>
+
+            <div style="background:var(--bg-2);border:1px solid var(--line);border-radius:6px;padding:12px;">
+              <div style="font-family:'Instrument Serif',serif;font-style:italic;color:var(--accent);font-size:24px;line-height:1;">#1</div>
+              <div style="font-size:13px;color:var(--ink);font-weight:500;margin-top:4px;line-height:1.4;">Đêm mưa và cái ô màu đỏ</div>
+              <div class="mono" style="font-size:10px;color:var(--ink-4);margin-top:6px;">CHUYỆN PHỐ CỔ · EP 03</div>
+              <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);">
+                <div>
+                  <div class="mono" style="font-size:9px;color:var(--ink-4);">VIEWS</div>
+                  <div style="font-family:'Instrument Serif',serif;color:var(--ink);font-size:16px;">847K</div>
+                </div>
+                <div>
+                  <div class="mono" style="font-size:9px;color:var(--ink-4);">RETENTION</div>
+                  <div style="font-family:'Instrument Serif',serif;color:var(--green);font-size:16px;">82%</div>
+                </div>
+              </div>
+            </div>
+
+          </aside>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ MODULE 01 — STORY ============ -->
+<section class="module-section darker" id="story">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 01 · Story Engine</div>
+        <h3>Kịch bản viết bởi <em>AI có ngữ cảnh</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Story Engine ghi nhớ nhân vật, motif, và phong cách của series. Mỗi tập mới được viết phù hợp với cả mạch truyện đã có, không phải sinh ra trong khoảng trống.</p>
+      </div>
+    </div>
+
+    <!-- Story Editor UI -->
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  Chuyện Phố Cổ  /  <strong>EP 04 — Tiếng dương cầm tầng ba</strong></span>
+        <span class="mono">Auto-saved 12s ago</span>
+      </div>
+      <div class="app-body" style="grid-template-columns: 200px 1.6fr 1fr;">
+
+        <!-- Scene navigator -->
+        <aside class="sidebar">
+          <div class="sidebar-section">Phân cảnh · 6/6</div>
+          <div class="scene-list">
+            <div class="scene-item">
+              <div class="scene-no">SCENE 01 · 0:00–0:14</div>
+              <div class="scene-title">Cảnh ngoài. Phố cổ — Sáng sớm</div>
+            </div>
+            <div class="scene-item">
+              <div class="scene-no">SCENE 02 · 0:14–0:28</div>
+              <div class="scene-title">Cảnh trong. Quán cà phê</div>
+            </div>
+            <div class="scene-item active">
+              <div class="scene-no">SCENE 03 · 0:28–0:45</div>
+              <div class="scene-title">Cảnh trong. Cửa sổ tầng ba</div>
+            </div>
+            <div class="scene-item">
+              <div class="scene-no">SCENE 04 · 0:45–0:58</div>
+              <div class="scene-title">Cảnh ngoài. Cầu thang xoắn</div>
+            </div>
+            <div class="scene-item">
+              <div class="scene-no">SCENE 05 · 0:58–1:08</div>
+              <div class="scene-title">Cảnh trong. Phòng dương cầm</div>
+            </div>
+            <div class="scene-item">
+              <div class="scene-no">SCENE 06 · 1:08–1:18</div>
+              <div class="scene-title">Cảnh kết. Hành lang tối</div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">Nhân vật</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;">
+              <span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#c44d3a,#8a3522);"></span>
+              <span style="font-size:12px;color:var(--ink-2);">Lan</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;">
+              <span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#4a7c7e,#2d5b5d);"></span>
+              <span style="font-size:12px;color:var(--ink-2);">Minh</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;">
+              <span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#d4a574,#8a6d4a);"></span>
+              <span style="font-size:12px;color:var(--ink-2);">Người dẫn truyện</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Script document -->
+        <main class="main-area">
+          <div class="sub-header">
+            <div>
+              <div class="crumb">SCENE 03 · NỘI. Cửa sổ tầng ba</div>
+              <h3>Tiếng dương cầm tầng ba</h3>
+            </div>
+            <div class="actions">
+              <div class="pill"><span class="dot"></span> 1:18 / 1:30</div>
+              <div class="pill accent"><span class="dot"></span> Drama · Tâm linh</div>
+            </div>
+          </div>
+
+          <div class="script-doc">
+            <div class="scene-head">CẢNH 03 — NỘI. Cửa sổ tầng ba — Đêm muộn.</div>
+            <div class="action">Lan đứng bên cửa sổ. Phố cổ phía dưới chìm trong mưa nhỏ. Đèn vàng từ một ô cửa duy nhất phía bên kia đường hắt qua màn mưa.</div>
+            <div class="character">LAN</div>
+            <div class="parens">(thì thầm, gần như chỉ nói với chính mình)</div>
+            <div class="dialogue">Đã ba đêm rồi. Vẫn cùng một bản nhạc đó.</div>
+            <div class="action">Tiếng dương cầm vọng qua, mơ hồ, không rõ từ đâu. Một giai điệu cũ Lan từng nghe ở đâu đó, từ rất lâu.</div>
+            <div class="character">NGƯỜI DẪN TRUYỆN <span style="color: var(--ink-4); font-weight: 400; font-size: 10px;">(V.O.)</span></div>
+            <div class="dialogue">Có những âm thanh không thuộc về thực tại. Chúng đến từ một nơi khác — nơi mà ký ức và hiện thực giao thoa.</div>
+            <div class="action">Lan với tay lấy chiếc áo khoác trên ghế. Quyết định đến.</div>
+            <div class="character">LAN</div>
+            <div class="dialogue">Mình phải xem ai đang chơi.</div>
+          </div>
+        </main>
+
+        <!-- AI Assist panel -->
+        <aside style="border-left: 1px solid var(--line); background: var(--bg-1); padding: 20px;">
+          <h6 style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-4);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px;">AI Trợ lý kịch bản</h6>
+
+          <div class="ai-panel">
+            <div class="ai-msg user">
+              <div class="role">Bạn</div>
+              Cho tôi 3 cách kết cảnh này hồi hộp hơn
+            </div>
+            <div class="ai-msg ai">
+              <div class="role">Reelcraft AI · GPT-4 · 4.2s</div>
+              Dựa trên tone "tâm lý nhẹ" và Series Bible của bạn:
+              <div class="ai-suggest">
+                <span class="chip">A · Tiếng dương cầm dừng đột ngột</span>
+                <span class="chip">B · Bóng người ở cửa sổ</span>
+                <span class="chip">C · Chuông điện thoại bất ngờ</span>
+              </div>
+            </div>
+            <div class="ai-input">
+              <span>Nhập yêu cầu...</span>
+              <span class="mono" style="color: var(--accent);">⌘ ↵</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Feature strip -->
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Series Bible</span>
+        <span class="feat-desc">AI ghi nhớ nhân vật, motif, mạch truyện qua mọi tập.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Hook Builder</span>
+        <span class="feat-desc">Tự sinh 3 giây mở đầu giữ chân người xem.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">Tone Control</span>
+        <span class="feat-desc">Drama, tâm linh, hài, kinh dị — chuyển style trong một click.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Plot Continuity</span>
+        <span class="feat-desc">Cảnh báo plot hole, đề xuất cliffhanger giữa các tập.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 02 — VISUAL / STORYBOARD ============ -->
+<section class="module-section dark" id="visual">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 02 · Visual Direction</div>
+        <h3>Storyboard tự động, <em>nhân vật nhất quán</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Mỗi cảnh được phân tích thành shot list với gợi ý góc máy. Character Vault giữ gương mặt nhân vật không đổi qua hàng chục tập — điều mà các tool AI thông thường vẫn không làm được.</p>
+      </div>
+    </div>
+
+    <!-- Storyboard UI -->
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  EP 04  /  <strong>Storyboard</strong></span>
+        <span class="mono">6 cảnh · 12 shots</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Storyboard · Sinh từ kịch bản · 23 giây trước</div>
+            <h3>12 shots — sắp xếp theo thời lượng tập</h3>
+          </div>
+          <div class="actions">
+            <div class="btn">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Sinh lại
+            </div>
+            <div class="btn primary">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Render tất cả
+            </div>
+          </div>
+        </div>
+
+        <!-- Storyboard grid -->
+        <div class="storyboard-grid">
+
+          <!-- Frame 1 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a3025"/><stop offset="100%" stop-color="#1a1410"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb1)"/>
+                <!-- silhouette of street -->
+                <rect x="0" y="55" width="160" height="35" fill="#0a0805"/>
+                <rect x="20" y="35" width="30" height="35" fill="#1a1410"/>
+                <rect x="55" y="25" width="40" height="45" fill="#15100c"/>
+                <rect x="100" y="40" width="35" height="30" fill="#1a1410"/>
+                <!-- street lamp glow -->
+                <circle cx="75" cy="35" r="2" fill="#d4a574"/>
+                <circle cx="75" cy="35" r="6" fill="#d4a574" opacity="0.15"/>
+              </svg>
+              <div class="frame-no">01</div>
+              <div class="frame-tag">WIDE</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Phố cổ về đêm</strong>
+              Wide establishing shot · Slow push-in
+            </div>
+          </div>
+
+          <!-- Frame 2 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a2520"/><stop offset="100%" stop-color="#10080a"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb2)"/>
+                <rect x="0" y="60" width="160" height="30" fill="#0a0508"/>
+                <!-- window frame -->
+                <rect x="50" y="20" width="60" height="50" fill="#1a1015" stroke="#5a3025" stroke-width="0.5"/>
+                <line x1="80" y1="20" x2="80" y2="70" stroke="#5a3025" stroke-width="0.5"/>
+                <line x1="50" y1="45" x2="110" y2="45" stroke="#5a3025" stroke-width="0.5"/>
+                <!-- figure -->
+                <ellipse cx="80" cy="45" rx="14" ry="22" fill="#c44d3a" opacity="0.6"/>
+                <circle cx="80" cy="32" r="6" fill="#c44d3a"/>
+              </svg>
+              <div class="frame-no">02</div>
+              <div class="frame-tag">MEDIUM</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Lan bên cửa sổ</strong>
+              Medium shot · Static · Side profile
+            </div>
+          </div>
+
+          <!-- Frame 3 -->
+          <div class="frame-card selected">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1820"/><stop offset="100%" stop-color="#08060c"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb3)"/>
+                <!-- rain lines -->
+                <line x1="20" y1="0" x2="15" y2="20" stroke="#3a4a5a" stroke-width="0.3"/>
+                <line x1="40" y1="0" x2="35" y2="25" stroke="#3a4a5a" stroke-width="0.3"/>
+                <line x1="65" y1="0" x2="60" y2="22" stroke="#3a4a5a" stroke-width="0.3"/>
+                <line x1="90" y1="0" x2="85" y2="20" stroke="#3a4a5a" stroke-width="0.3"/>
+                <line x1="110" y1="0" x2="105" y2="25" stroke="#3a4a5a" stroke-width="0.3"/>
+                <line x1="135" y1="0" x2="130" y2="22" stroke="#3a4a5a" stroke-width="0.3"/>
+                <!-- distant window glow -->
+                <rect x="100" y="35" width="20" height="14" fill="#d4a574" opacity="0.6"/>
+                <rect x="100" y="35" width="20" height="14" fill="none" stroke="#8a6d4a" stroke-width="0.3"/>
+                <!-- foreground silhouette frame -->
+                <rect x="0" y="0" width="50" height="90" fill="#000" opacity="0.7"/>
+              </svg>
+              <div class="frame-no">03</div>
+              <div class="frame-tag">POV</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Cửa sổ phía xa</strong>
+              POV · Through rain · Soft focus pull
+            </div>
+          </div>
+
+          <!-- Frame 4 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#251a1a"/><stop offset="100%" stop-color="#0c0608"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb4)"/>
+                <!-- close up face -->
+                <ellipse cx="80" cy="50" rx="35" ry="40" fill="#5a3a2a" opacity="0.5"/>
+                <ellipse cx="80" cy="50" rx="28" ry="35" fill="#7a4a30" opacity="0.7"/>
+                <!-- eye glints -->
+                <ellipse cx="68" cy="42" rx="2" ry="1" fill="#d4a574"/>
+                <ellipse cx="92" cy="42" rx="2" ry="1" fill="#d4a574"/>
+              </svg>
+              <div class="frame-no">04</div>
+              <div class="frame-tag">CLOSE-UP</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Mắt Lan</strong>
+              Close-up · Shallow DOF · Hold 2s
+            </div>
+          </div>
+
+          <!-- Frame 5 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#15101a"/><stop offset="100%" stop-color="#08050a"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb5)"/>
+                <!-- piano keys hint -->
+                <rect x="40" y="50" width="80" height="15" fill="#0a0608"/>
+                <rect x="42" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="50" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="58" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="66" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="74" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="82" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="90" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="98" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="106" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+                <rect x="114" y="50" width="6" height="15" fill="#d4a574" opacity="0.4"/>
+              </svg>
+              <div class="frame-no">05</div>
+              <div class="frame-tag">DETAIL</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Phím dương cầm</strong>
+              Insert · Static · Sync to music beat
+            </div>
+          </div>
+
+          <!-- Frame 6 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1810"/><stop offset="100%" stop-color="#0c0604"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb6)"/>
+                <!-- staircase -->
+                <polygon points="50,90 60,75 60,60 70,60 70,45 80,45 80,30 90,30" fill="#1a0e08"/>
+                <polygon points="50,90 60,75 60,60 70,60 70,45 80,45 80,30 90,30 160,30 160,90" fill="#1a0e08" opacity="0.4"/>
+                <!-- top of stairs glow -->
+                <ellipse cx="100" cy="30" rx="20" ry="4" fill="#d4a574" opacity="0.3"/>
+              </svg>
+              <div class="frame-no">06</div>
+              <div class="frame-tag">LOW ANGLE</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Cầu thang xoắn</strong>
+              Low angle · Slow tilt up
+            </div>
+          </div>
+
+          <!-- Frame 7 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="sb7" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#15182a"/><stop offset="100%" stop-color="#08080c"/></linearGradient></defs>
+                <rect width="160" height="90" fill="url(#sb7)"/>
+                <!-- doorway with light -->
+                <rect x="60" y="20" width="40" height="60" fill="#000"/>
+                <rect x="62" y="22" width="36" height="56" fill="#d4a574" opacity="0.3"/>
+                <rect x="65" y="25" width="30" height="50" fill="#d4a574" opacity="0.15"/>
+                <!-- silhouette -->
+                <ellipse cx="80" cy="55" rx="10" ry="22" fill="#000"/>
+              </svg>
+              <div class="frame-no">07</div>
+              <div class="frame-tag">MEDIUM</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Khung cửa sáng</strong>
+              Doorway frame · Symmetric · 2s hold
+            </div>
+          </div>
+
+          <!-- Frame 8 -->
+          <div class="frame-card">
+            <div class="frame-thumb">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+                <defs><radialGradient id="sb8" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3a2818"/><stop offset="100%" stop-color="#08040a"/></radialGradient></defs>
+                <rect width="160" height="90" fill="url(#sb8)"/>
+                <circle cx="80" cy="45" r="20" fill="#1a0e08" opacity="0.6"/>
+                <text x="80" y="50" text-anchor="middle" fill="#d4a574" font-family="Georgia" font-style="italic" font-size="14" opacity="0.6">?</text>
+              </svg>
+              <div class="frame-no">08</div>
+              <div class="frame-tag">CTA · END</div>
+            </div>
+            <div class="frame-meta">
+              <strong>Kết tập · Cliffhanger</strong>
+              Tiếp tục tập 05 — End card auto
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Character Vault preview row -->
+        <div style="margin-top: 36px;">
+          <h6 style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-4);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;">Character Vault · Đảm bảo nhất quán</h6>
+          <div class="char-grid">
+            <div class="char-card">
+              <div class="char-portrait">
+                <svg viewBox="0 0 72 72">
+                  <defs><radialGradient id="cv1" cx="50%" cy="40%"><stop offset="0%" stop-color="#a45040"/><stop offset="100%" stop-color="#4a2018"/></radialGradient></defs>
+                  <rect width="72" height="72" fill="#1a0e08"/>
+                  <circle cx="36" cy="32" r="14" fill="url(#cv1)"/>
+                  <path d="M 14 72 Q 36 50 58 72 Z" fill="url(#cv1)"/>
+                </svg>
+              </div>
+              <div class="char-name">Lan</div>
+              <div class="char-role">Vai chính · Female</div>
+              <div class="char-stats">
+                <div class="char-stat"><div class="v">12</div><div class="l">Tập</div></div>
+                <div class="char-stat"><div class="v">98%</div><div class="l">Match</div></div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="char-portrait">
+                <svg viewBox="0 0 72 72">
+                  <defs><radialGradient id="cv2" cx="50%" cy="40%"><stop offset="0%" stop-color="#4a7c7e"/><stop offset="100%" stop-color="#1a3a3c"/></radialGradient></defs>
+                  <rect width="72" height="72" fill="#0a1518"/>
+                  <circle cx="36" cy="30" r="14" fill="url(#cv2)"/>
+                  <path d="M 14 72 Q 36 48 58 72 Z" fill="url(#cv2)"/>
+                </svg>
+              </div>
+              <div class="char-name">Minh</div>
+              <div class="char-role">Vai phụ · Male</div>
+              <div class="char-stats">
+                <div class="char-stat"><div class="v">7</div><div class="l">Tập</div></div>
+                <div class="char-stat"><div class="v">96%</div><div class="l">Match</div></div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="char-portrait">
+                <svg viewBox="0 0 72 72">
+                  <defs><radialGradient id="cv3" cx="50%" cy="40%"><stop offset="0%" stop-color="#a08fc4"/><stop offset="100%" stop-color="#3a2a55"/></radialGradient></defs>
+                  <rect width="72" height="72" fill="#15102a"/>
+                  <circle cx="36" cy="32" r="14" fill="url(#cv3)"/>
+                  <path d="M 14 72 Q 36 50 58 72 Z" fill="url(#cv3)"/>
+                </svg>
+              </div>
+              <div class="char-name">Bà Năm</div>
+              <div class="char-role">Vai nền · Female</div>
+              <div class="char-stats">
+                <div class="char-stat"><div class="v">3</div><div class="l">Tập</div></div>
+                <div class="char-stat"><div class="v">94%</div><div class="l">Match</div></div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="char-portrait">
+                <svg viewBox="0 0 72 72">
+                  <defs><radialGradient id="cv4" cx="50%" cy="40%"><stop offset="0%" stop-color="#d4a574"/><stop offset="100%" stop-color="#4a3a20"/></radialGradient></defs>
+                  <rect width="72" height="72" fill="#1a1510"/>
+                  <circle cx="36" cy="30" r="14" fill="url(#cv4)"/>
+                  <path d="M 14 72 Q 36 48 58 72 Z" fill="url(#cv4)"/>
+                </svg>
+              </div>
+              <div class="char-name">Ông Sáu</div>
+              <div class="char-role">Vai nền · Male</div>
+              <div class="char-stats">
+                <div class="char-stat"><div class="v">5</div><div class="l">Tập</div></div>
+                <div class="char-stat"><div class="v">97%</div><div class="l">Match</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature strip -->
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Auto Shot List</span>
+        <span class="feat-desc">Phân cảnh, góc máy, độ dài shot từ kịch bản.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Character Vault</span>
+        <span class="feat-desc">Embedding gương mặt giữ nhân vật xuyên suốt nhiều tập.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">Style Presets</span>
+        <span class="feat-desc">Cinematic, anime, retro film, vintage Sài Gòn...</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Continuity Check</span>
+        <span class="feat-desc">Phát hiện cảnh lệch tone, ánh sáng, prop bị mất.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 03 — RENDER QUEUE ============ -->
+<section class="module-section darker">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 03 · Generation Core</div>
+        <h3>Bốn model AI, <em>một hàng đợi</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Hệ thống tự chọn model phù hợp với từng shot — Veo cho cảnh cinematic, Kling cho continuity, Seedance cho draft, Sora cho close-up. Bạn không cần quan tâm.</p>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  <strong>Render Queue</strong></span>
+        <span class="mono">8 active · 3 priority</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Tất cả series · Đang xử lý</div>
+            <h3>Hàng đợi render</h3>
+          </div>
+          <div class="actions">
+            <div class="pill"><span class="dot"></span> Đang chạy 8</div>
+            <div class="pill accent"><span class="dot"></span> Priority 3</div>
+            <div class="pill green"><span class="dot"></span> Hoàn thành hôm nay 24</div>
+          </div>
+        </div>
+
+        <div class="queue-table">
+          <div class="queue-header">
+            <div></div>
+            <div>Shot · Cảnh</div>
+            <div>Model</div>
+            <div>Resolution</div>
+            <div>Tiến độ</div>
+            <div>ETA</div>
+            <div>Cost</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 04 · Cảnh 03 · Cửa sổ phía xa</strong>
+              <span class="scene-tag">SHOT 04/12 · POV · 5s</span>
+            </div>
+            <div>
+              <span class="pill accent">Veo 3.1</span>
+            </div>
+            <div class="mono">1080p · 9:16</div>
+            <div>
+              <div class="progress-bar"><div class="fill" style="width: 67%;"></div></div>
+              <div class="progress-label">67% · rendering</div>
+            </div>
+            <div class="mono" style="color: var(--ink);">2:14</div>
+            <div class="mono" style="color: var(--ink-3);">$0.75</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 04 · Cảnh 04 · Close-up mắt Lan</strong>
+              <span class="scene-tag">SHOT 06/12 · CLOSE-UP · 3s</span>
+            </div>
+            <div>
+              <span class="pill" style="background: rgba(160, 143, 196, 0.1); border-color: rgba(160, 143, 196, 0.3); color: var(--purple);">Sora 2 Pro</span>
+            </div>
+            <div class="mono">1080p · 9:16</div>
+            <div>
+              <div class="progress-bar"><div class="fill" style="width: 32%;"></div></div>
+              <div class="progress-label">32% · rendering</div>
+            </div>
+            <div class="mono" style="color: var(--ink);">3:48</div>
+            <div class="mono" style="color: var(--ink-3);">$1.50</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 05 · Cảnh 01 · Phố cổ sương sớm</strong>
+              <span class="scene-tag">SHOT 01/10 · WIDE · 6s</span>
+            </div>
+            <div>
+              <span class="pill" style="background: rgba(110, 142, 196, 0.1); border-color: rgba(110, 142, 196, 0.3); color: var(--blue);">Kling 3.0</span>
+            </div>
+            <div class="mono">1080p · 9:16</div>
+            <div>
+              <div class="progress-bar"><div class="fill" style="width: 88%;"></div></div>
+              <div class="progress-label">88% · finalizing</div>
+            </div>
+            <div class="mono" style="color: var(--ink);">0:42</div>
+            <div class="mono" style="color: var(--ink-3);">$0.60</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 03 · Re-render cảnh 02</strong>
+              <span class="scene-tag">SHOT 03/8 · DRAFT · 5s</span>
+            </div>
+            <div>
+              <span class="pill green">Seedance 2.0</span>
+            </div>
+            <div class="mono">720p · 9:16</div>
+            <div>
+              <div class="progress-bar complete"><div class="fill" style="width: 100%;"></div></div>
+              <div class="progress-label" style="color: var(--green);">Hoàn thành</div>
+            </div>
+            <div class="mono" style="color: var(--ink-3);">—</div>
+            <div class="mono" style="color: var(--ink-3);">$0.45</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 06 · Cảnh 02 · Bến Bạch Đằng</strong>
+              <span class="scene-tag">SHOT 03/9 · WIDE · 6s</span>
+            </div>
+            <div>
+              <span class="pill accent">Veo 3.1</span>
+            </div>
+            <div class="mono">4K · 9:16</div>
+            <div>
+              <div class="progress-bar"><div class="fill" style="width: 14%;"></div></div>
+              <div class="progress-label">14% · queued</div>
+            </div>
+            <div class="mono" style="color: var(--ink);">7:20</div>
+            <div class="mono" style="color: var(--ink-3);">$1.80</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb"></div>
+            <div class="queue-title">
+              <strong>EP 22 · Draft preview · Ấm trà</strong>
+              <span class="scene-tag">SHOT 01/6 · DRAFT · 4s</span>
+            </div>
+            <div>
+              <span class="pill green">Seedance 2.0</span>
+            </div>
+            <div class="mono">720p · 9:16</div>
+            <div>
+              <div class="progress-bar"><div class="fill" style="width: 5%;"></div></div>
+              <div class="progress-label">5% · starting</div>
+            </div>
+            <div class="mono" style="color: var(--ink);">1:08</div>
+            <div class="mono" style="color: var(--ink-3);">$0.36</div>
+          </div>
+        </div>
+
+        <!-- Model legend -->
+        <div style="margin-top: 24px; padding: 16px 20px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+          <div>
+            <span class="pill accent">Veo 3.1</span>
+            <div style="font-size: 11px; color: var(--ink-3); margin-top: 8px;">Cinematic shots · Native audio · $0.20/s</div>
+          </div>
+          <div>
+            <span class="pill" style="background: rgba(160, 143, 196, 0.1); border-color: rgba(160, 143, 196, 0.3); color: var(--purple);">Sora 2 Pro</span>
+            <div style="font-size: 11px; color: var(--ink-3); margin-top: 8px;">Photoreal · Close-ups · $0.30–0.50/s</div>
+          </div>
+          <div>
+            <span class="pill" style="background: rgba(110, 142, 196, 0.1); border-color: rgba(110, 142, 196, 0.3); color: var(--blue);">Kling 3.0</span>
+            <div style="font-size: 11px; color: var(--ink-3); margin-top: 8px;">Character consistency · $0.10/s</div>
+          </div>
+          <div>
+            <span class="pill green">Seedance 2.0</span>
+            <div style="font-size: 11px; color: var(--ink-3); margin-top: 8px;">Draft & volume · $0.09/s</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Smart Routing</span>
+        <span class="feat-desc">AI tự chọn model rẻ nhất phù hợp với shot.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Cost Estimation</span>
+        <span class="feat-desc">Báo trước tổng chi phí render cả tập trước khi chạy.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">Auto-Retry</span>
+        <span class="feat-desc">Generation fail → tự thử lại model khác.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Priority Lane</span>
+        <span class="feat-desc">Tập "hot" có thể đẩy lên đầu hàng đợi.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 04 — VOICE STUDIO ============ -->
+<section class="module-section dark" id="voice">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 04 · Audio Stack</div>
+        <h3>Giọng đọc tiếng Việt, <em>cảm xúc thật</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Lồng tiếng đa nhân vật trong cùng một tập, với giọng Bắc – Trung – Nam, có thể thêm cảm xúc: thì thầm, nhấn mạnh, cười. Hoặc clone giọng của chính bạn chỉ từ 30 giây mẫu.</p>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  EP 04  /  <strong>Voice Studio</strong></span>
+        <span class="mono">3 nhân vật · 12 dòng thoại</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Lồng tiếng & Âm thanh</div>
+            <h3>Voice Studio</h3>
+          </div>
+          <div class="actions">
+            <div class="btn">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Sinh lại tất cả
+            </div>
+            <div class="btn primary">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Xuất audio
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-layout">
+
+          <!-- Voice library -->
+          <div class="voice-col">
+            <h6>Giọng đọc · Tiếng Việt</h6>
+            <div class="voice-option active">
+              <div class="voice-avatar" style="background: linear-gradient(135deg,#c44d3a,#8a3522);"></div>
+              <div class="voice-meta">
+                <strong>Ngọc Huyền</strong>
+                <span class="vsub">Nữ · Hà Nội · Tâm lý</span>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div class="voice-option">
+              <div class="voice-avatar" style="background: linear-gradient(135deg,#d4a574,#8a6d4a);"></div>
+              <div class="voice-meta">
+                <strong>Quang Minh</strong>
+                <span class="vsub">Nam · Hà Nội · Trầm ấm</span>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div class="voice-option">
+              <div class="voice-avatar" style="background: linear-gradient(135deg,#4a7c7e,#2d5b5d);"></div>
+              <div class="voice-meta">
+                <strong>Mai Phương</strong>
+                <span class="vsub">Nữ · Sài Gòn · Trẻ trung</span>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div class="voice-option">
+              <div class="voice-avatar" style="background: linear-gradient(135deg,#a08fc4,#7d6ba3);"></div>
+              <div class="voice-meta">
+                <strong>Tuấn Khanh</strong>
+                <span class="vsub">Nam · Huế · Trầm tư</span>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div class="voice-option" style="background: rgba(212, 165, 116, 0.04); border: 1px dashed rgba(212, 165, 116, 0.3);">
+              <div class="voice-avatar" style="background: var(--bg-3); display: flex; align-items: center; justify-content: center; color: var(--accent);">+</div>
+              <div class="voice-meta">
+                <strong style="color: var(--accent);">Clone giọng của tôi</strong>
+                <span class="vsub">30 giây mẫu</span>
+              </div>
+              <div></div>
+            </div>
+          </div>
+
+          <!-- Waveform editor -->
+          <div class="waveform">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase;">SCENE 03 · LINE 2</div>
+                <div style="font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); margin-top: 2px;">"Đã ba đêm rồi. Vẫn cùng một bản nhạc đó."</div>
+              </div>
+              <div class="pill accent"><span class="dot"></span> Thì thầm</div>
+            </div>
+            <div class="wave-canvas">
+              <div class="wave-bar played" style="height: 30%;"></div>
+              <div class="wave-bar played" style="height: 50%;"></div>
+              <div class="wave-bar played" style="height: 70%;"></div>
+              <div class="wave-bar played" style="height: 85%;"></div>
+              <div class="wave-bar played" style="height: 90%;"></div>
+              <div class="wave-bar played" style="height: 60%;"></div>
+              <div class="wave-bar played" style="height: 45%;"></div>
+              <div class="wave-bar played" style="height: 55%;"></div>
+              <div class="wave-bar played" style="height: 75%;"></div>
+              <div class="wave-bar played" style="height: 80%;"></div>
+              <div class="wave-bar played" style="height: 65%;"></div>
+              <div class="wave-bar played" style="height: 40%;"></div>
+              <div class="wave-bar played" style="height: 30%;"></div>
+              <div class="wave-bar played" style="height: 50%;"></div>
+              <div class="wave-bar" style="height: 60%;"></div>
+              <div class="wave-bar" style="height: 70%;"></div>
+              <div class="wave-bar" style="height: 80%;"></div>
+              <div class="wave-bar" style="height: 65%;"></div>
+              <div class="wave-bar" style="height: 50%;"></div>
+              <div class="wave-bar" style="height: 35%;"></div>
+              <div class="wave-bar" style="height: 25%;"></div>
+              <div class="wave-bar" style="height: 30%;"></div>
+              <div class="wave-bar" style="height: 45%;"></div>
+              <div class="wave-bar" style="height: 60%;"></div>
+              <div class="wave-bar" style="height: 70%;"></div>
+              <div class="wave-bar" style="height: 55%;"></div>
+              <div class="wave-bar" style="height: 40%;"></div>
+              <div class="wave-bar" style="height: 30%;"></div>
+              <div class="wave-bar" style="height: 25%;"></div>
+              <div class="wave-bar" style="height: 35%;"></div>
+              <div class="wave-bar" style="height: 50%;"></div>
+              <div class="wave-bar" style="height: 65%;"></div>
+              <div class="wave-bar" style="height: 75%;"></div>
+              <div class="wave-bar" style="height: 60%;"></div>
+              <div class="wave-bar" style="height: 45%;"></div>
+              <div class="wave-bar" style="height: 30%;"></div>
+              <div class="wave-bar" style="height: 25%;"></div>
+              <div class="wave-bar" style="height: 20%;"></div>
+              <div class="wave-bar" style="height: 30%;"></div>
+              <div class="wave-bar" style="height: 40%;"></div>
+              <div class="wave-playhead" style="left: 38%;"></div>
+            </div>
+            <div class="wave-controls">
+              <span><span class="wave-time">0:01.2</span> / 0:03.4</span>
+              <div style="display: flex; gap: 8px;">
+                <div class="pill"><span class="dot"></span> Tốc độ 0.9x</div>
+                <div class="pill"><span class="dot"></span> Pitch −2</div>
+              </div>
+            </div>
+
+            <h6 style="font-family: 'Geist Mono', monospace; font-size: 9px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;">Dòng thoại trong cảnh</h6>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div class="dialogue-line">
+                <div class="char-dot narr"></div>
+                <div>
+                  <div class="ch-name">NGƯỜI DẪN TRUYỆN</div>
+                  <div class="ch-line">Lan đứng bên cửa sổ. Phố cổ phía dưới chìm trong mưa nhỏ...</div>
+                </div>
+              </div>
+              <div class="dialogue-line" style="border: 1px solid var(--accent);">
+                <div class="char-dot lan"></div>
+                <div>
+                  <div class="ch-name">LAN <span style="color: var(--ink-4); font-weight: 400; font-size: 9px;">(THÌ THẦM)</span></div>
+                  <div class="ch-line">Đã ba đêm rồi. Vẫn cùng một bản nhạc đó.</div>
+                </div>
+              </div>
+              <div class="dialogue-line">
+                <div class="char-dot narr"></div>
+                <div>
+                  <div class="ch-name">NGƯỜI DẪN TRUYỆN</div>
+                  <div class="ch-line">Có những âm thanh không thuộc về thực tại...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BGM panel -->
+          <div class="voice-col">
+            <h6>Nhạc nền · Auto-match</h6>
+
+            <div style="background: var(--bg-3); border: 1px solid var(--line); border-radius: 5px; padding: 12px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <div>
+                  <div style="font-size: 12px; color: var(--ink); font-weight: 500;">Lonely Piano</div>
+                  <div class="mono" style="font-size: 10px; color: var(--ink-3); margin-top: 2px;">Ambient · Sad · 1:24</div>
+                </div>
+                <div class="voice-play-btn" style="background: var(--accent); color: var(--bg); border-color: var(--accent);">▶</div>
+              </div>
+              <div class="pill accent" style="font-size: 9px;">✓ Đã chọn cho EP 04</div>
+            </div>
+
+            <div style="font-family: 'Geist Mono', monospace; font-size: 9px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin: 16px 0 10px;">Gợi ý khác</div>
+
+            <div style="background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 12px; color: var(--ink-2);">Rainy Window</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4);">Ambient · 1:32</div>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div style="background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 12px; color: var(--ink-2);">Old Music Box</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4);">Strings · 1:18</div>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+            <div style="background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 12px; color: var(--ink-2);">Suspended</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4);">Drone · 1:45</div>
+              </div>
+              <div class="voice-play-btn">▶</div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 12px; background: rgba(212, 165, 116, 0.05); border: 1px solid rgba(212, 165, 116, 0.2); border-radius: 5px;">
+              <div class="mono" style="font-size: 9px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px;">SFX tự động · 4 lớp</div>
+              <div style="font-size: 11px; color: var(--ink-2); line-height: 1.5;">Mưa nhẹ · Tiếng bước chân gỗ · Dương cầm xa · Hơi thở</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Đa nhân vật</span>
+        <span class="feat-desc">3 giọng đọc khác nhau trong cùng một tập, tự sync.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Voice Cloning</span>
+        <span class="feat-desc">Train giọng riêng từ 30 giây mẫu của bạn.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">BGM Auto-match</span>
+        <span class="feat-desc">AI chọn nhạc nền dựa trên mood của cảnh.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">SFX Layer</span>
+        <span class="feat-desc">Hiệu ứng âm thanh môi trường tự động.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 05 — TIMELINE / POST ============ -->
+<section class="module-section darker" id="post">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 05 · Post-Production</div>
+        <h3>Dựng phim <em>không cần mở editor</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Khi voice và shots sẵn sàng, Reelcraft tự cắt theo nhịp nhạc, gắn caption tiếng Việt, áp branding. Bạn xem preview và duyệt — chỉ chỉnh sửa nếu muốn.</p>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  EP 04  /  <strong>Timeline</strong></span>
+        <span class="mono">1:18 / 1:18 · 5 tracks</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Dựng phim · Tự động hoàn thành 23s trước</div>
+            <h3>Tiếng dương cầm tầng ba</h3>
+          </div>
+          <div class="actions">
+            <div class="btn">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Cắt lại tự động
+            </div>
+            <div class="btn">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Đổi thumbnail
+            </div>
+            <div class="btn primary">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              Duyệt & đăng
+            </div>
+          </div>
+        </div>
+
+        <!-- Video preview -->
+        <div class="timeline-preview">
+          <svg class="preview-bg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="prev" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a1820"/>
+                <stop offset="100%" stop-color="#08060c"/>
+              </linearGradient>
+              <radialGradient id="prev-glow" cx="60%" cy="40%">
+                <stop offset="0%" stop-color="#d4a574" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#d4a574" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="800" height="450" fill="url(#prev)"/>
+            <rect x="450" y="160" width="120" height="80" fill="#d4a574" opacity="0.6"/>
+            <rect x="450" y="160" width="120" height="80" fill="none" stroke="#8a6d4a" stroke-width="1"/>
+            <line x1="510" y1="160" x2="510" y2="240" stroke="#8a6d4a" stroke-width="0.5"/>
+            <line x1="450" y1="200" x2="570" y2="200" stroke="#8a6d4a" stroke-width="0.5"/>
+            <rect x="0" y="0" width="280" height="450" fill="#000" opacity="0.7"/>
+            <circle cx="60" cy="60" r="100" fill="url(#prev-glow)"/>
+            <!-- rain effect -->
+            <g opacity="0.5">
+              <line x1="100" y1="0" x2="80" y2="50" stroke="#5a6a7a" stroke-width="0.7"/>
+              <line x1="200" y1="0" x2="180" y2="60" stroke="#5a6a7a" stroke-width="0.7"/>
+              <line x1="320" y1="0" x2="300" y2="55" stroke="#5a6a7a" stroke-width="0.7"/>
+              <line x1="450" y1="0" x2="430" y2="50" stroke="#5a6a7a" stroke-width="0.7"/>
+              <line x1="580" y1="0" x2="560" y2="60" stroke="#5a6a7a" stroke-width="0.7"/>
+              <line x1="680" y1="0" x2="660" y2="50" stroke="#5a6a7a" stroke-width="0.7"/>
+            </g>
+          </svg>
+          <div class="preview-controls">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>
+          </div>
+          <div class="preview-overlay">
+            <div class="subtitle">Đã ba đêm rồi. Vẫn cùng một bản nhạc đó.</div>
+          </div>
+          <div class="preview-time">0:42 / 1:18</div>
+        </div>
+
+        <!-- Timeline tracks -->
+        <div class="timeline-tracks">
+          <!-- Time ruler -->
+          <div style="display: grid; grid-template-columns: 80px 1fr; gap: 8px; align-items: center; margin-bottom: 8px; position: relative;">
+            <div></div>
+            <div style="display: flex; justify-content: space-between; padding: 0 4px; font-family: 'Geist Mono', monospace; font-size: 9px; color: var(--ink-4); border-bottom: 1px solid var(--line); padding-bottom: 4px; position: relative;">
+              <span>0:00</span>
+              <span>0:15</span>
+              <span>0:30</span>
+              <span>0:45</span>
+              <span>1:00</span>
+              <span>1:15</span>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+
+          <!-- Tracks -->
+          <div class="track">
+            <div class="track-label">Video</div>
+            <div class="track-area">
+              <div class="clip video" style="flex: 0 0 18%;"></div>
+              <div class="clip video" style="flex: 0 0 18%;"></div>
+              <div class="clip video" style="flex: 0 0 22%;"></div>
+              <div class="clip video" style="flex: 0 0 15%;"></div>
+              <div class="clip video" style="flex: 0 0 13%;"></div>
+              <div class="clip video" style="flex: 0 0 14%;"></div>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label">Voice</div>
+            <div class="track-area">
+              <div class="clip audio" style="flex: 0 0 12%; margin-left: 6%;"></div>
+              <div class="clip audio" style="flex: 0 0 16%; margin-left: 4%;"></div>
+              <div class="clip audio" style="flex: 0 0 14%; margin-left: 8%;"></div>
+              <div class="clip audio" style="flex: 0 0 18%; margin-left: 6%;"></div>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label">Subtitle</div>
+            <div class="track-area">
+              <div class="clip sub" style="flex: 0 0 14%; margin-left: 4%;"></div>
+              <div class="clip sub" style="flex: 0 0 18%; margin-left: 4%;"></div>
+              <div class="clip sub" style="flex: 0 0 12%; margin-left: 8%;"></div>
+              <div class="clip sub" style="flex: 0 0 22%; margin-left: 4%;"></div>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label">BGM</div>
+            <div class="track-area">
+              <div class="clip bgm" style="flex: 1;"></div>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label">SFX</div>
+            <div class="track-area">
+              <div class="clip sfx" style="flex: 0 0 8%; margin-left: 12%;"></div>
+              <div class="clip sfx" style="flex: 0 0 6%; margin-left: 22%;"></div>
+              <div class="clip sfx" style="flex: 0 0 10%; margin-left: 4%;"></div>
+              <div class="clip sfx" style="flex: 0 0 5%; margin-left: 18%;"></div>
+              <div class="playhead-marker" style="left: 56%;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Cắt theo nhịp</span>
+        <span class="feat-desc">Auto-cut sync với beat BGM, không cần tay.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Subtitle thông minh</span>
+        <span class="feat-desc">Vietnamese caption với typography preset.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">Hook & Thumbnail</span>
+        <span class="feat-desc">3 variants cho 3 giây đầu, A/B test sẵn.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Branding tự động</span>
+        <span class="feat-desc">Logo, watermark, end-card cho từng Page.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 06 — DISTRIBUTION / SCHEDULER ============ -->
+<section class="module-section dark" id="distribute">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 06 · Distribution</div>
+        <h3>Lịch đăng <em>cho cả tháng</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Đăng trực tiếp qua Graph API chính thức của Meta. Một lần lên lịch, hệ thống đăng tự động theo giờ vàng của từng Page và cross-post sang TikTok, YouTube Shorts.</p>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  <strong>Publishing Schedule</strong></span>
+        <span class="mono">Tuần này · 4 Pages · 18 posts</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Lịch phân phối · Tuần 24 · 2026</div>
+            <h3>17 — 23 tháng 5</h3>
+          </div>
+          <div class="actions">
+            <div class="pill blue"><span class="dot"></span> Facebook · 12</div>
+            <div class="pill" style="background: rgba(217, 126, 110, 0.1); border-color: rgba(217, 126, 110, 0.3); color: var(--red);"><span class="dot"></span> TikTok · 4</div>
+            <div class="pill" style="background: rgba(160, 143, 196, 0.1); border-color: rgba(160, 143, 196, 0.3); color: var(--purple);"><span class="dot"></span> IG · 2</div>
+            <div class="btn primary">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              Lịch mới
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule grid -->
+        <div class="schedule-grid">
+          <!-- Headers -->
+          <div class="sched-header"></div>
+          <div class="sched-header">T2<div class="day">17</div></div>
+          <div class="sched-header">T3<div class="day">18</div></div>
+          <div class="sched-header">T4<div class="day">19</div></div>
+          <div class="sched-header">T5<div class="day">20</div></div>
+          <div class="sched-header">T6<div class="day">21</div></div>
+          <div class="sched-header">T7<div class="day">22</div></div>
+          <div class="sched-header" style="border-right: none;">CN<div class="day">23</div></div>
+
+          <!-- 7AM row -->
+          <div class="sched-time">07:00</div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Phố Cổ · EP 03</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Phố Cổ · EP 04</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Phố Cổ · EP 05</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell" style="border-right: none;"></div>
+
+          <!-- 12PM row -->
+          <div class="sched-time">12:00</div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Quán Trà Đá · EP 21</strong>
+              <span class="platform-meta">FB · published</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Quán Trà Đá · EP 22</strong>
+              <span class="platform-meta">FB · draft</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Hồi Ức HN · EP 05</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell" style="border-right: none;"></div>
+
+          <!-- 6PM row -->
+          <div class="sched-time">18:00</div>
+          <div class="sched-cell">
+            <div class="sched-event tt">
+              <strong>Phố Cổ · EP 03 ↓</strong>
+              <span class="platform-meta">TikTok cross-post</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Đêm SG · EP 08</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell">
+            <div class="sched-event tt">
+              <strong>Phố Cổ · EP 04 ↓</strong>
+              <span class="platform-meta">TikTok cross-post</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Đêm SG · EP 09</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+            <div class="sched-event ig">
+              <strong>Hồi Ức HN · EP 05 ↓</strong>
+              <span class="platform-meta">IG Reels cross-post</span>
+            </div>
+          </div>
+          <div class="sched-cell" style="border-right: none;"></div>
+
+          <!-- 9PM row -->
+          <div class="sched-time">21:00</div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Phố Cổ · Promo</strong>
+              <span class="platform-meta">FB · awaiting approve</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell">
+            <div class="sched-event fb">
+              <strong>Đêm SG · Promo</strong>
+              <span class="platform-meta">FB · scheduled</span>
+            </div>
+          </div>
+          <div class="sched-cell"></div>
+          <div class="sched-cell" style="border-right: none; border-bottom: none;">
+            <div class="sched-event fb">
+              <strong>Recap tuần</strong>
+              <span class="platform-meta">FB · draft</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pages managed -->
+        <div style="margin-top: 24px; padding: 16px 20px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+          <h6 style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-4);letter-spacing:0.15em;text-transform:uppercase;">Pages · 4 đang vận hành</h6>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #c44d3a, #8a3522);"></span>
+              <span style="font-size: 12px; color: var(--ink-2);">Chuyện Phố Cổ</span>
+              <span class="mono" style="font-size: 10px; color: var(--ink-4);">42K</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #4a7c7e, #2d5b5d);"></span>
+              <span style="font-size: 12px; color: var(--ink-2);">Đêm Sài Gòn</span>
+              <span class="mono" style="font-size: 10px; color: var(--ink-4);">28K</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #a08fc4, #7d6ba3);"></span>
+              <span style="font-size: 12px; color: var(--ink-2);">Hồi Ức Hà Nội</span>
+              <span class="mono" style="font-size: 10px; color: var(--ink-4);">19K</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #d4a574, #8a6d4a);"></span>
+              <span style="font-size: 12px; color: var(--ink-2);">Quán Trà Đá</span>
+              <span class="mono" style="font-size: 10px; color: var(--ink-4);">85K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Meta API native</span>
+        <span class="feat-desc">Graph API chính thức, không auto trình duyệt.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Multi-Page</span>
+        <span class="feat-desc">Quản lý hàng chục Page từ một workspace.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">Best-time AI</span>
+        <span class="feat-desc">Lịch đăng theo giờ vàng từng Page riêng.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Cross-post</span>
+        <span class="feat-desc">TikTok, YouTube Shorts, IG Reels từ một lần đăng.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ MODULE 07 — ANALYTICS ============ -->
+<section class="module-section darker" id="analytics">
+  <div class="container">
+    <div class="module-head">
+      <div class="left">
+        <div class="tag">Module 07 · Analytics</div>
+        <h3>Hiệu suất quay lại <em>nuôi sáng tạo</em>.</h3>
+      </div>
+      <div class="right">
+        <p>Mỗi tập đăng lên đều được theo dõi: retention từng giây, sentiment comment, A/B test hook. Insight quay lại Story Engine — đề xuất chủ đề tập sau dựa trên dữ liệu thật.</p>
+      </div>
+    </div>
+
+    <div class="app">
+      <div class="app-titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">reelcraft.studio  /  <strong>Analytics</strong>  /  Chuyện Phố Cổ</span>
+        <span class="mono">Last 30 days</span>
+      </div>
+      <div style="padding: 24px 28px; background: var(--bg-1);">
+
+        <div class="sub-header">
+          <div>
+            <div class="crumb">Phân tích hiệu suất</div>
+            <h3>Chuyện Phố Cổ — 30 ngày qua</h3>
+          </div>
+          <div class="actions">
+            <div class="pill"><span class="dot"></span> Realtime</div>
+            <div class="btn">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Xuất báo cáo
+            </div>
+          </div>
+        </div>
+
+        <!-- Top metrics -->
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="m-label">Tổng views</div>
+            <div class="m-value">8.42M</div>
+            <div class="m-change up">↗ +24% vs tháng trước</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-label">Avg watch time</div>
+            <div class="m-value">52s</div>
+            <div class="m-change up">↗ +8s</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-label">Retention 30s</div>
+            <div class="m-value">68%</div>
+            <div class="m-change up">↗ +4.2pt</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-label">Engagement rate</div>
+            <div class="m-value">9.4%</div>
+            <div class="m-change up">↗ +1.1pt</div>
+          </div>
+        </div>
+
+        <!-- Main charts -->
+        <div class="analytics-main">
+          <!-- Retention chart -->
+          <div class="chart-card">
+            <h6>Retention curve · trung bình 12 tập</h6>
+            <div class="chart-sub">Tỉ lệ người xem giữ lại theo từng giây</div>
+            <svg viewBox="0 0 600 200" style="width: 100%; height: 200px;">
+              <defs>
+                <linearGradient id="ret-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#d4a574" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#d4a574" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- grid -->
+              <line x1="0" y1="40" x2="600" y2="40" stroke="#232838" stroke-width="0.5"/>
+              <line x1="0" y1="80" x2="600" y2="80" stroke="#232838" stroke-width="0.5"/>
+              <line x1="0" y1="120" x2="600" y2="120" stroke="#232838" stroke-width="0.5"/>
+              <line x1="0" y1="160" x2="600" y2="160" stroke="#232838" stroke-width="0.5"/>
+              <!-- area -->
+              <path d="M 0 10 L 50 20 L 100 35 L 150 50 L 200 65 L 250 75 L 300 85 L 350 95 L 400 105 L 450 115 L 500 125 L 550 140 L 600 160 L 600 200 L 0 200 Z" fill="url(#ret-grad)"/>
+              <path d="M 0 10 L 50 20 L 100 35 L 150 50 L 200 65 L 250 75 L 300 85 L 350 95 L 400 105 L 450 115 L 500 125 L 550 140 L 600 160" stroke="#d4a574" stroke-width="2" fill="none"/>
+              <!-- Hook marker -->
+              <line x1="60" y1="0" x2="60" y2="200" stroke="#7ab586" stroke-width="0.5" stroke-dasharray="3,3"/>
+              <text x="64" y="14" fill="#7ab586" font-family="JetBrains Mono, monospace" font-size="9">HOOK 3s</text>
+              <!-- 30s marker -->
+              <line x1="300" y1="0" x2="300" y2="200" stroke="#6e8ec4" stroke-width="0.5" stroke-dasharray="3,3"/>
+              <text x="304" y="14" fill="#6e8ec4" font-family="JetBrains Mono, monospace" font-size="9">30s · 68%</text>
+              <!-- x-axis labels -->
+              <text x="0" y="195" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">0s</text>
+              <text x="195" y="195" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">20s</text>
+              <text x="390" y="195" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">40s</text>
+              <text x="580" y="195" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">60s</text>
+              <!-- y-axis labels -->
+              <text x="0" y="44" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">100%</text>
+              <text x="0" y="124" fill="#5a5a57" font-family="JetBrains Mono, monospace" font-size="9">50%</text>
+            </svg>
+
+            <div style="margin-top: 20px; padding: 12px 16px; background: rgba(212, 165, 116, 0.06); border: 1px solid rgba(212, 165, 116, 0.2); border-radius: 5px;">
+              <div class="mono" style="font-size: 9px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;">AI Insight</div>
+              <div style="font-size: 13px; color: var(--ink-2); line-height: 1.5;">
+                Retention drop mạnh nhất ở giây <strong style="color: var(--ink);">14–18</strong>.
+                Đề xuất: thêm hook thứ hai ở giây 12 cho EP 05.
+              </div>
+            </div>
+          </div>
+
+          <!-- Top episodes -->
+          <div class="top-eps">
+            <h6 style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink);margin-bottom:4px;font-weight:400;">Top tập viral</h6>
+            <div class="chart-sub" style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-4);margin-bottom:16px;">Sắp xếp theo views</div>
+
+            <div class="top-ep-row">
+              <div class="rank">1</div>
+              <div>
+                <div class="ep-name">Đêm mưa và cái ô màu đỏ</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4); margin-top: 2px;">EP 03 · 82% retention</div>
+              </div>
+              <div class="ep-views">847K</div>
+            </div>
+            <div class="top-ep-row">
+              <div class="rank">2</div>
+              <div>
+                <div class="ep-name">Người khách lạ số 17</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4); margin-top: 2px;">EP 01 · 74% retention</div>
+              </div>
+              <div class="ep-views">512K</div>
+            </div>
+            <div class="top-ep-row">
+              <div class="rank">3</div>
+              <div>
+                <div class="ep-name">Bức thư trong ngăn kéo gỗ</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4); margin-top: 2px;">EP 02 · 68% retention</div>
+              </div>
+              <div class="ep-views">298K</div>
+            </div>
+            <div class="top-ep-row">
+              <div class="rank">4</div>
+              <div>
+                <div class="ep-name">Tấm gương soi sai mặt</div>
+                <div class="mono" style="font-size: 10px; color: var(--ink-4); margin-top: 2px;">EP 06 · 65% retention</div>
+              </div>
+              <div class="ep-views">186K</div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 14px; background: var(--bg-3); border-radius: 5px;">
+              <div class="mono" style="font-size: 9px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Sentiment comment</div>
+              <div style="display: flex; gap: 4px; height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: var(--green); flex: 0 0 72%;"></div>
+                <div style="background: var(--ink-4); flex: 0 0 20%;"></div>
+                <div style="background: var(--red); flex: 0 0 8%;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 6px; font-family: 'Geist Mono', monospace; font-size: 10px;">
+                <span style="color: var(--green);">72% Tích cực</span>
+                <span style="color: var(--ink-4);">20% Trung lập</span>
+                <span style="color: var(--red);">8% Tiêu cực</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feat">
+        <span class="feat-no">01</span>
+        <span class="feat-name">Retention từng giây</span>
+        <span class="feat-desc">Xác định điểm rớt khán giả để chỉnh tập sau.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">02</span>
+        <span class="feat-name">Sentiment AI</span>
+        <span class="feat-desc">Phân tích cảm xúc comment tiếng Việt.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">03</span>
+        <span class="feat-name">A/B Hook Test</span>
+        <span class="feat-desc">So sánh 2 phiên bản 3s đầu trên audience nhỏ.</span>
+      </div>
+      <div class="feat">
+        <span class="feat-no">04</span>
+        <span class="feat-name">Trend Radar</span>
+        <span class="feat-desc">Gợi ý chủ đề viral đang trend cho series.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ WORKFLOW ============ -->
+<section class="module-section dark">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-num">Workflow</div>
+      <h2>Một dòng chảy. <em>Bảy bước</em>.</h2>
+      <p class="lead">Toàn bộ vòng đời một tập phim — từ ý tưởng đến view đầu tiên — diễn ra trong một workspace duy nhất.</p>
+    </div>
+
+    <div class="flow-diagram">
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12l4 4v12H4z"/><path d="M16 4v4h4M8 12h8M8 16h8"/></svg>
+        <div class="flow-no">— 01</div>
+        <div class="flow-title">Ý tưởng</div>
+        <div class="flow-desc">Outline · Prompt</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14"/><line x1="9" y1="5" x2="9" y2="19"/><line x1="15" y1="5" x2="15" y2="19"/></svg>
+        <div class="flow-no">— 02</div>
+        <div class="flow-title">Kịch bản</div>
+        <div class="flow-desc">AI script · Series Bible</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <div class="flow-no">— 03</div>
+        <div class="flow-title">Storyboard</div>
+        <div class="flow-desc">Shot list · Character vault</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="6 4 20 12 6 20"/></svg>
+        <div class="flow-no">— 04</div>
+        <div class="flow-title">Render</div>
+        <div class="flow-desc">Multi-model AI</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 9v6M8 6v12M12 4v16M16 7v10M20 10v4"/></svg>
+        <div class="flow-no">— 05</div>
+        <div class="flow-title">Voice & BGM</div>
+        <div class="flow-desc">TTS Việt · SFX layer</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14"/><path d="M3 9h18"/></svg>
+        <div class="flow-no">— 06</div>
+        <div class="flow-title">Dựng</div>
+        <div class="flow-desc">Auto-cut · Subtitle</div>
+      </div>
+      <div class="flow-node">
+        <svg class="flow-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18a13 13 0 0 1 0-18"/></svg>
+        <div class="flow-no">— 07</div>
+        <div class="flow-title">Đăng</div>
+        <div class="flow-desc">FB · TT · YT · IG</div>
+      </div>
+    </div>
+
+    <!-- Stats below workflow -->
+    <div style="margin-top: 60px; padding: 32px; background: var(--bg-1); border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;">
+      <div>
+        <div class="mono" style="font-size: 10px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Thời gian sản xuất / tập</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--ink); line-height: 1;"><em style="color: var(--accent); font-style: italic;">~25</em> phút</div>
+        <div style="font-size: 12px; color: var(--ink-3); margin-top: 6px;">Truyền thống: 4–8 giờ/tập</div>
+      </div>
+      <div>
+        <div class="mono" style="font-size: 10px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Chi phí / tập</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--ink); line-height: 1;"><em style="color: var(--accent); font-style: italic;">~$2</em> USD</div>
+        <div style="font-size: 12px; color: var(--ink-3); margin-top: 6px;">Render + voice + bandwidth</div>
+      </div>
+      <div>
+        <div class="mono" style="font-size: 10px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Pages tối đa / người</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--ink); line-height: 1;"><em style="color: var(--accent); font-style: italic;">10+</em> Pages</div>
+        <div style="font-size: 12px; color: var(--ink-3); margin-top: 6px;">Vận hành cùng lúc</div>
+      </div>
+      <div>
+        <div class="mono" style="font-size: 10px; color: var(--ink-4); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Sản lượng / tháng</div>
+        <div style="font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--ink); line-height: 1;"><em style="color: var(--accent); font-style: italic;">300+</em> video</div>
+        <div style="font-size: 12px; color: var(--ink-3); margin-top: 6px;">Trên hệ thống 1 người vận hành</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ CLOSING ============ -->
+<section class="closing">
+  <h2>Studio AI <em>vận hành 24/7</em>.</h2>
+  <p class="closing-lead">
+    Khoảng cách từ ý tưởng đến lượt view đầu tiên — phần đáng nhẽ ra không nên tồn tại — bị xóa.
+  </p>
+
+  <div class="sig-row">
+    <div class="sig-block">
+      <div class="l">Document</div>
+      <div class="v">Reelcraft · Product Proposal v1.1</div>
+    </div>
+    <div class="sig-block">
+      <div class="l">Prepared by</div>
+      <div class="v">VinMotion AI Engineering</div>
+    </div>
+    <div class="sig-block">
+      <div class="l">Status</div>
+      <div class="v">Confidential · For Review</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 · Reelcraft Studio</span>
+  <span>Built for the speed of social</span>
+</footer>
+
+</body>
+</html>
