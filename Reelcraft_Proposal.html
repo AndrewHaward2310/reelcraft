@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REELCRAFT — AI Short Film Studio for Social</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #0a0a0c;
+    --bg-1: #111114;
+    --bg-2: #18181c;
+    --bg-3: #1f1f25;
+    --ink-100: #f5f1ea;
+    --ink-80: #d6d2cb;
+    --ink-60: #9b9890;
+    --ink-40: #6a675f;
+    --ink-20: #3a3833;
+    --gold: #d4a574;
+    --gold-bright: #e8b76e;
+    --gold-dim: #8a6d4a;
+    --rust: #c44d3a;
+    --teal: #4a7c7e;
+    --grain-opacity: 0.04;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--ink-100);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: var(--grain-opacity);
+    mix-blend-mode: overlay;
+  }
+
+  /* Typography */
+  .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 400; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  /* Layout */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section {
+    position: relative;
+    padding: 120px 0;
+  }
+
+  /* ====== Top bar ====== */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 32px;
+    backdrop-filter: blur(20px) saturate(1.2);
+    background: rgba(10, 10, 12, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+  }
+  .brand-mark::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--bg-0);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+  .topnav { display: flex; gap: 28px; align-items: center; font-size: 13px; }
+  .topnav a {
+    color: var(--ink-60);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .topnav a:hover { color: var(--gold-bright); }
+  .topnav .doc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-40);
+    border: 1px solid var(--ink-20);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ====== Hero ====== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 160px 32px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 30% 40%, rgba(212, 165, 116, 0.08), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 70%, rgba(74, 124, 126, 0.06), transparent 60%);
+  }
+
+  /* Cinema film strip on edges */
+  .filmstrip {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 24px;
+    background: var(--bg-0);
+    z-index: 1;
+  }
+  .filmstrip::before, .filmstrip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(transparent 0, transparent 12px,
+        var(--ink-20) 12px, var(--ink-20) 14px,
+        transparent 14px, transparent 30px),
+      linear-gradient(90deg, transparent 8px, var(--ink-20) 8px, var(--ink-20) 16px, transparent 16px);
+    background-size: 100% 30px, 100% 100%;
+    background-repeat: repeat-y, no-repeat;
+    opacity: 0.4;
+  }
+  .filmstrip.left { left: 0; }
+  .filmstrip.right { right: 0; }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero h1 {
+    font-size: clamp(56px, 9vw, 132px);
+    font-weight: 200;
+    line-height: 0.92;
+    max-width: 1100px;
+    margin-bottom: 40px;
+    letter-spacing: -0.04em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .hero h1 .lined {
+    text-decoration: underline;
+    text-decoration-color: var(--gold-dim);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 12px;
+  }
+
+  .hero-lead {
+    max-width: 640px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-80);
+    margin-bottom: 64px;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding-top: 40px;
+    border-top: 1px solid var(--ink-20);
+    max-width: 880px;
+  }
+  .meta-item .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+    margin-bottom: 8px;
+  }
+  .meta-item .meta-value {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--ink-100);
+    font-weight: 400;
+  }
+  .meta-item .meta-value em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ====== Section header ====== */
+  .section-head {
+    margin-bottom: 80px;
+    max-width: 920px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-num::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--gold);
+  }
+  .section-head h2 {
+    font-size: clamp(40px, 5.5vw, 76px);
+    line-height: 1.0;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .section-head h2 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .section-head .lead {
+    font-size: 18px;
+    color: var(--ink-60);
+    max-width: 720px;
+    line-height: 1.55;
+  }
+
+  /* ====== Problem section ====== */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--ink-20);
+    border: 1px solid var(--ink-20);
+  }
+  .problem-card {
+    background: var(--bg-1);
+    padding: 56px 48px;
+    position: relative;
+  }
+  .problem-card .num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 56px;
+    color: var(--ink-20);
+    line-height: 1;
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+  .problem-card h4 {
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--ink-100);
+  }
+  .problem-card p {
+    color: var(--ink-60);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ====== Vision / Solution showcase ====== */
+  .solution {
+    background: var(--bg-1);
+  }
+  .solution-inner {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .solution-text h3 {
+    font-size: clamp(34px, 4.5vw, 56px);
+    line-height: 1.05;
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+  .solution-text h3 em { font-style: italic; color: var(--gold); }
+  .solution-text p {
+    color: var(--ink-80);
+    font-size: 17px;
+    margin-bottom: 20px;
+    line-height: 1.65;
+  }
+  .solution-text .quote {
+    border-left: 2px solid var(--gold);
+    padding-left: 24px;
+    margin-top: 40px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--gold-bright);
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  /* Mock product viewport */
+  .product-mock {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--bg-2);
+    border: 1px solid var(--ink-20);
+    border-radius: 6px;
+    padding: 16px;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.5),
+      0 0 80px rgba(212, 165, 116, 0.08);
+  }
+  .mock-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-3);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-60);
+  }
+  .mock-titlebar .dots { display: flex; gap: 6px; }
+  .mock-titlebar .dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ink-20);
+  }
+  .mock-screen {
+    background: linear-gradient(135deg, #1a1a1f 0%, #0e0e12 100%);
+    border-radius: 4px;
+    padding: 24px;
+    height: calc(100% - 36px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .mock-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .mock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212, 165, 116, 0.08);
+    color: var(--gold-bright);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    border: 1px solid rgba(212, 165, 116, 0.2);
+  }
+  .mock-pill .dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+  .mock-script {
+    background: var(--bg-3);
+    padding: 16px;
+    border-radius: 4px;
+    border-left: 2px solid var(--gold);
+    font-size: 11px;
+    color: var(--ink-80);
+    line-height: 1.7;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+  }
+  .mock-frames {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .mock-frame {
+    aspect-ratio: 9/16;
+    background: linear-gradient(135deg, #2a2a30, #1a1a1f);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--ink-20);
+  }
+  .mock-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(212, 165, 116, 0.15), transparent 60%);
+  }
+  .mock-frame.active { border-color: var(--gold); }
+  .mock-stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: auto;
+  }
+  .mock-stat {
+    background: var(--bg-3);
+    padding: 10px 12px;
+    border-radius: 3px;
+  }
+  .mock-stat .v {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink-100);
+    font-weight: 400;
+  }
+  .mock-stat .l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-40);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+
+  /* ====== Pipeline ====== */
+  .pipeline {
+    background: var(--bg-0);
+  }
+  .pipeline-flow {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 60px;
+  }
+  .flow-step {
+    position: relative;
+    padding: 32px 20px 32px 0;
+    border-right: 1px dashed var(--ink-20);
+  }
+  .flow-step:last-child { border-right: none; }
+  .flow-step .step-no {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
+  }
+  .flow-step h5 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: var(--ink-100);
+    line-height: 1.2;
+  }
+  .flow-step p {
+    font-size: 12px;
+    color: var(--ink-60);
+    line-height: 1.55;
+  }
+  .flow-step .step-icon {
+    width: 32px; height: 32px;
+    margin-bottom: 20px;
+    color: var(--gold);
+  }
+
+  /* ====== Capabilities grid (modules) ====== */
+  .modules {
+    background: var(--bg-1);
+  }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--ink-20);
+    border: 1px solid var(--ink-20);
+  }
+  .module {
+    background: var(--bg-1);
+    padding: 56px 48px;
+    transition: background 0.3s;
+  }
+  .module:hover { background: var(--bg-2); }
+  .module-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--ink-20);
+  }
+  .module-no {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .module-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-40);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border: 1px solid var(--ink-20);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .module h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .module h3 em { font-style: italic; color: var(--gold); }
+  .module .module-lead {
+    color: var(--ink-60);
+    font-size: 14px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .module-features {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+  }
+  .module-features li {
+    font-size: 13px;
+    color: var(--ink-80);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.45;
+  }
+  .module-features li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 1px;
+    background: var(--gold);
+  }
+
+  /* ====== Series spotlight ====== */
+  .series-spotlight {
+    background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+    overflow: hidden;
+  }
+  .series-inner {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .series-text h2 {
+    font-size: clamp(40px, 5vw, 64px);
+    margin-bottom: 32px;
+  }
+  .series-text h2 em { font-style: italic; color: var(--gold); }
+  .series-text .lead {
+    color: var(--ink-80);
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+  .series-text .bullet-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 32px;
+    margin-top: 40px;
+  }
+  .bullet-row .bullet {
+    border-top: 1px solid var(--ink-20);
+    padding-top: 16px;
+  }
+  .bullet h6 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: var(--ink-100);
+    font-weight: 400;
+  }
+  .bullet p {
+    font-size: 13px;
+    color: var(--ink-60);
+    line-height: 1.5;
+  }
+
+  /* Episode timeline mock */
+  .episodes-mock {
+    background: var(--bg-2);
+    border: 1px solid var(--ink-20);
+    border-radius: 6px;
+    padding: 28px;
+    position: relative;
+  }
+  .ep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--ink-20);
+    margin-bottom: 20px;
+  }
+  .ep-header h6 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--ink-100);
+    font-weight: 400;
+  }
+  .ep-header .ep-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .ep-list { display: flex; flex-direction: column; gap: 10px; }
+  .ep-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto 100px;
+    gap: 16px;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-3);
+    border-radius: 4px;
+    border-left: 2px solid transparent;
+  }
+  .ep-row.published { border-left-color: var(--gold); }
+  .ep-row.processing { border-left-color: var(--teal); }
+  .ep-row.queue { border-left-color: var(--ink-20); }
+  .ep-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold);
+  }
+  .ep-title {
+    font-size: 13px;
+    color: var(--ink-100);
+  }
+  .ep-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-60);
+  }
+  .ep-state {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .ep-row.published .ep-state { color: var(--gold); }
+  .ep-row.processing .ep-state { color: var(--teal); }
+  .ep-row.queue .ep-state { color: var(--ink-40); }
+
+  /* ====== Distribution ====== */
+  .distribution {
+    background: var(--bg-0);
+  }
+  .dist-layout {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .dist-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--ink-20);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .channel {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px 28px;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--ink-20);
+    transition: background 0.2s;
+  }
+  .channel:last-child { border-bottom: none; }
+  .channel:hover { background: var(--bg-2); }
+  .channel-icon {
+    width: 44px; height: 44px;
+    background: var(--bg-3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+  }
+  .channel-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--ink-100);
+    font-weight: 400;
+  }
+  .channel-desc {
+    font-size: 12px;
+    color: var(--ink-60);
+    margin-top: 2px;
+  }
+  .channel-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-40);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ====== Architecture ====== */
+  .architecture {
+    background: var(--bg-1);
+  }
+  .arch-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--ink-20);
+    border: 1px solid var(--ink-20);
+  }
+  .arch-layer {
+    background: var(--bg-1);
+    padding: 32px 40px;
+    display: grid;
+    grid-template-columns: 120px 1fr 2fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .arch-layer .layer-no {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 40px;
+    color: var(--gold-dim);
+    font-weight: 300;
+  }
+  .arch-layer h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .arch-layer .layer-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .arch-layer .layer-desc {
+    color: var(--ink-60);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .arch-layer .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .tech-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 9px;
+    border: 1px solid var(--ink-20);
+    border-radius: 2px;
+    color: var(--ink-60);
+  }
+  .tech-tag.accent { color: var(--gold); border-color: rgba(212, 165, 116, 0.3); }
+
+  /* ====== Use cases ====== */
+  .usecases {
+    background: var(--bg-0);
+  }
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .case-card {
+    background: var(--bg-1);
+    border: 1px solid var(--ink-20);
+    border-radius: 4px;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .case-card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-4px);
+  }
+  .case-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .case-card:hover::before { opacity: 1; }
+  .case-card .case-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .case-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+  .case-card p {
+    color: var(--ink-60);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .case-stat {
+    padding-top: 20px;
+    border-top: 1px solid var(--ink-20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .case-stat .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-40);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .case-stat .val {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ====== Deliverables ====== */
+  .deliverables {
+    background: var(--bg-1);
+  }
+  .deliv-row {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 60px;
+    align-items: start;
+    padding: 40px 0;
+    border-top: 1px solid var(--ink-20);
+  }
+  .deliv-row:last-child { border-bottom: 1px solid var(--ink-20); }
+  .deliv-row .deliv-no {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--gold-dim);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .deliv-row h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  .deliv-row p {
+    color: var(--ink-60);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 780px;
+  }
+
+  /* ====== Closing ====== */
+  .closing {
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(212, 165, 116, 0.1), transparent 70%),
+      var(--bg-0);
+    padding: 160px 0;
+    text-align: center;
+    position: relative;
+  }
+  .closing h2 {
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    margin-bottom: 32px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 200;
+  }
+  .closing h2 em { font-style: italic; color: var(--gold); }
+  .closing .closing-lead {
+    color: var(--ink-80);
+    font-size: 19px;
+    max-width: 620px;
+    margin: 0 auto 56px;
+    line-height: 1.55;
+  }
+
+  .closing-sig {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--ink-20);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    text-align: left;
+  }
+  .sig-block .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-40);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sig-block .val {
+    font-family: 'Fraunces', serif;
+    color: var(--ink-100);
+    font-size: 15px;
+  }
+
+  /* ====== Footer ====== */
+  footer {
+    padding: 40px 32px;
+    border-top: 1px solid var(--ink-20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-40);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ====== Animations ====== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    animation: fadeUp 1s ease-out forwards;
+  }
+  .reveal-1 { animation-delay: 0.1s; }
+  .reveal-2 { animation-delay: 0.3s; }
+  .reveal-3 { animation-delay: 0.5s; }
+  .reveal-4 { animation-delay: 0.7s; }
+
+  @keyframes scan {
+    0%, 100% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 1; }
+  }
+  .scan-line {
+    position: absolute;
+    left: 16px; right: 16px;
+    top: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    animation: scan 4s ease-in-out infinite;
+  }
+
+  /* ====== Responsive ====== */
+  @media (max-width: 1024px) {
+    .pipeline-flow { grid-template-columns: repeat(2, 1fr); }
+    .flow-step { border-right: none; border-bottom: 1px dashed var(--ink-20); padding-bottom: 24px; }
+    .solution-inner, .series-inner, .dist-layout { grid-template-columns: 1fr; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
+    .arch-layer { grid-template-columns: 60px 1fr; }
+    .arch-layer .layer-desc { grid-column: 1 / -1; }
+    .hero h1 { font-size: 64px; }
+    .hero-meta { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    section { padding: 80px 0; }
+    .container { padding: 0 20px; }
+    .topnav .nav-links { display: none; }
+    .hero { padding: 120px 20px 60px; }
+    .hero-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .module { padding: 36px 28px; }
+    .module-features { grid-template-columns: 1fr; }
+    .arch-layer { padding: 24px; }
+    .closing-sig { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span>REELCRAFT</span>
+  </div>
+  <div class="topnav">
+    <div class="nav-links" style="display:flex; gap:28px;">
+      <a href="#pipeline">Pipeline</a>
+      <a href="#modules">Modules</a>
+      <a href="#series">Series Engine</a>
+      <a href="#distribution">Distribution</a>
+      <a href="#architecture">Architecture</a>
+    </div>
+    <span class="doc-num">DOC · v1.0 · 2026</span>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="filmstrip left"></div>
+  <div class="filmstrip right"></div>
+
+  <div class="hero-inner">
+    <div class="eyebrow reveal reveal-1">Product Proposal · AI Short Film Studio</div>
+    <h1 class="reveal reveal-2">
+      Từ một <em>ý tưởng</em><br/>
+      đến <span class="lined">chuỗi phim ngắn</span><br/>
+      sống trên Facebook.
+    </h1>
+    <p class="hero-lead reveal reveal-3">
+      Reelcraft là studio AI khép kín biến một dòng kịch bản thành chuỗi phim ngắn có hình ảnh điện ảnh,
+      giọng đọc tiếng Việt tự nhiên, và lịch đăng tự động trên Facebook — cho phép một người sản xuất
+      khối lượng nội dung tương đương cả một ekip.
+    </p>
+
+    <div class="hero-meta reveal reveal-4">
+      <div class="meta-item">
+        <div class="meta-label">Output</div>
+        <div class="meta-value"><em>30–90s</em> Reels</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Resolution</div>
+        <div class="meta-value">1080p / 4K</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Aspect</div>
+        <div class="meta-value">9:16 · 1:1 · 16:9</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Throughput</div>
+        <div class="meta-value"><em>10–50</em> video/ngày</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEM ================= -->
+<section id="problem">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">01 — Bối cảnh</div>
+      <h2>Sản xuất phim ngắn cho mạng xã hội đang là <em>nút thắt cổ chai</em>.</h2>
+      <p class="lead">
+        Reels và short-form video là định dạng có ROI cao nhất trên Facebook hiện nay,
+        nhưng việc sản xuất ra một chuỗi nội dung đủ chất lượng và đều đặn vẫn đòi hỏi
+        một quy trình thủ công, đắt đỏ, và không thể nhân rộng.
+      </p>
+    </div>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="num">01</div>
+        <h4>Quy trình rời rạc</h4>
+        <p>Đội ngũ phải nhảy qua 7–10 công cụ khác nhau: viết kịch bản, vẽ storyboard, sinh hình, lồng tiếng, dựng, gắn caption, đăng bài.
+        Mỗi khâu là một file trôi nổi, một định dạng riêng, một con người chịu trách nhiệm.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">02</div>
+        <h4>Không có tính nhất quán</h4>
+        <p>Nhân vật đổi mặt giữa các tập. Giọng đọc khác nhau giữa các video. Phong cách hình ảnh chệch hướng sau vài tuần.
+        Khán giả mất kết nối với "thương hiệu" của kênh trước khi kịp hình thành thói quen xem.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">03</div>
+        <h4>Chi phí biên không giảm</h4>
+        <p>Sản xuất video thứ 100 vẫn tốn công như video đầu tiên. Không có hệ thống template hay cấu hình tái sử dụng,
+        nên đội ngũ phải đánh đổi giữa <em>khối lượng</em> và <em>chất lượng</em> mỗi tháng.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">04</div>
+        <h4>Tách rời khỏi hiệu quả thực</h4>
+        <p>Việc đo lường — view, retention, comment sentiment, watch-through — thường nằm ở dashboard tách biệt,
+        không phản hồi ngược vào quy trình sáng tạo. Đội ngũ ra quyết định "tập tiếp theo" bằng cảm tính.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOLUTION ================= -->
+<section class="solution" id="solution">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">02 — Giải pháp</div>
+      <h2>Một <em>không gian sản xuất</em> duy nhất, từ kịch bản đến lượt view.</h2>
+    </div>
+
+    <div class="solution-inner">
+      <div class="solution-text">
+        <h3>Reelcraft là <em>director's chair</em> của một studio AI.</h3>
+        <p>
+          Bạn ngồi xuống, đặt ra mục tiêu của tập phim, và để hệ thống lo phần còn lại:
+          AI viết kịch bản theo phong cách kênh, dựng storyboard, sinh video bằng các model
+          hàng đầu thị trường, lồng tiếng Việt tự nhiên, cắt dựng, gắn caption, và lên lịch đăng.
+        </p>
+        <p>
+          Mỗi quyết định nghệ thuật quan trọng đều có thể can thiệp — chọn shot khác, đổi giọng đọc,
+          chỉnh tone kịch bản — nhưng không quyết định nào bắt buộc phải làm thủ công.
+          Đây không phải một công cụ AI, đây là một <strong style="color: var(--ink-100); font-weight: 500;">dây chuyền sản xuất</strong>.
+        </p>
+
+        <div class="quote">
+          "Một người vận hành Reelcraft sản xuất ra khối lượng và chất lượng nội dung
+          tương đương một ekip 5–7 người làm thủ công."
+        </div>
+      </div>
+
+      <div class="product-mock">
+        <div class="mock-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span>reelcraft.studio / Series · "Chuyện Phố Cổ"</span>
+          <span>EP 07</span>
+        </div>
+        <div class="mock-screen">
+          <div class="scan-line"></div>
+          <div class="mock-row">
+            <div class="mock-pill"><span class="dot"></span> SCRIPT READY</div>
+            <div class="mock-pill" style="background: rgba(74, 124, 126, 0.1); color: var(--teal); border-color: rgba(74, 124, 126, 0.3);">
+              <span class="dot" style="background: var(--teal);"></span> RENDERING · 4/6
+            </div>
+          </div>
+
+          <div class="mock-script">
+            "Cảnh 03 — Nội. Quán cà phê cũ — Đêm. Lan đặt tách cà phê xuống bàn,
+            ngẩng đầu nhìn ra cửa kính. Tiếng mưa rơi đều..."
+          </div>
+
+          <div class="mock-frames">
+            <div class="mock-frame"></div>
+            <div class="mock-frame"></div>
+            <div class="mock-frame active"></div>
+            <div class="mock-frame"></div>
+          </div>
+
+          <div class="mock-stat-row">
+            <div class="mock-stat">
+              <div class="v">2:14</div>
+              <div class="l">Eta render</div>
+            </div>
+            <div class="mock-stat">
+              <div class="v">9:16</div>
+              <div class="l">Aspect</div>
+            </div>
+            <div class="mock-stat">
+              <div class="v">Veo 3.1</div>
+              <div class="l">Engine</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PIPELINE ================= -->
+<section class="pipeline" id="pipeline">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">03 — Pipeline</div>
+      <h2>Bảy bước. <em>Một dòng chảy</em>.</h2>
+      <p class="lead">
+        Mỗi tập phim đi qua pipeline tự động hóa hoàn chỉnh. Người vận hành có thể can thiệp
+        ở bất kỳ điểm nào, hoặc để toàn bộ chạy ở chế độ tự lái.
+      </p>
+    </div>
+
+    <div class="pipeline-flow">
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M4 4h12l4 4v12H4z"/><path d="M16 4v4h4"/><path d="M8 12h8M8 16h8M8 8h4"/>
+        </svg>
+        <div class="step-no">— 01</div>
+        <h5>Ý tưởng & Kịch bản</h5>
+        <p>Nhập chủ đề hoặc dán outline. Story Engine viết script theo style của series.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="5" width="6" height="6"/><rect x="13" y="5" width="6" height="6"/>
+          <rect x="3" y="14" width="6" height="6"/><rect x="13" y="14" width="6" height="6"/>
+        </svg>
+        <div class="step-no">— 02</div>
+        <h5>Storyboard</h5>
+        <p>Phân cảnh tự động, gợi ý góc máy, gắn nhân vật từ character vault.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <polygon points="6,4 20,12 6,20"/>
+        </svg>
+        <div class="step-no">— 03</div>
+        <h5>Sinh video</h5>
+        <p>Multi-model: Veo, Kling, Seedance, Sora. Auto-route theo độ phức tạp.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M4 9v6M8 6v12M12 4v16M16 7v10M20 10v4"/>
+        </svg>
+        <div class="step-no">— 04</div>
+        <h5>Voice & Audio</h5>
+        <p>TTS tiếng Việt 3 miền, voice clone, BGM auto-match, SFX layer.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="5" width="18" height="14"/><path d="M3 9h18M7 5v14M17 5v14"/>
+        </svg>
+        <div class="step-no">— 05</div>
+        <h5>Dựng & Caption</h5>
+        <p>Cut theo nhịp nhạc, subtitle tự động, hook 3s đầu, branding & watermark.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18a13 13 0 0 1 0-18"/>
+        </svg>
+        <div class="step-no">— 06</div>
+        <h5>Phân phối</h5>
+        <p>Đăng Facebook Pages/Reels theo lịch, cross-post TikTok & YouTube Shorts.</p>
+      </div>
+      <div class="flow-step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M3 20l4-10l5 6l4-8l5 10"/><path d="M3 20h18"/>
+        </svg>
+        <div class="step-no">— 07</div>
+        <h5>Tối ưu</h5>
+        <p>Dashboard view/retention, A/B test hook & thumbnail, gợi ý kịch bản tập sau.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODULES ================= -->
+<section class="modules" id="modules">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">04 — Capabilities</div>
+      <h2>Tám module. <em>Một hệ thống</em>.</h2>
+      <p class="lead">
+        Reelcraft được kiến trúc theo module độc lập có thể bật/tắt và mở rộng riêng,
+        cho phép tùy biến gói triển khai theo nhu cầu của từng kênh, từng thương hiệu.
+      </p>
+    </div>
+
+    <div class="modules-grid">
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 01</span>
+          <span class="module-tag">Story Engine</span>
+        </div>
+        <h3>Story <em>& Script Engine</em></h3>
+        <p class="module-lead">
+          LLM được fine-tune trên kịch bản Việt, giữ tính cách nhân vật và mạch truyện qua nhiều tập.
+        </p>
+        <ul class="module-features">
+          <li>Sinh kịch bản từ outline hoặc prompt ngắn</li>
+          <li>Series Bible: lưu nhân vật, bối cảnh, motif</li>
+          <li>Hook generator cho 3 giây đầu Reels</li>
+          <li>Genre templates: tâm lý, drama, kinh dị, hài</li>
+          <li>Tone & emotion control theo từng cảnh</li>
+          <li>Phát hiện plot hole, đề xuất chỉnh sửa</li>
+          <li>Auto-shorten / extend theo target duration</li>
+          <li>Mở rộng cốt truyện đa tập tự động</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 02</span>
+          <span class="module-tag">Visual Direction</span>
+        </div>
+        <h3>Storyboard <em>& Character Vault</em></h3>
+        <p class="module-lead">
+          Đảm bảo nhân vật, bối cảnh, và phong cách hình ảnh nhất quán xuyên suốt cả mùa phim.
+        </p>
+        <ul class="module-features">
+          <li>Phân cảnh tự động từ kịch bản</li>
+          <li>Shot list với gợi ý góc máy, cỡ cảnh</li>
+          <li>Character vault: embedding nhân vật</li>
+          <li>Location library: bối cảnh tái sử dụng</li>
+          <li>Style presets: cinematic, anime, retro film, vintage Sài Gòn</li>
+          <li>Lookbook tham chiếu (mood board AI)</li>
+          <li>Continuity check giữa các cảnh</li>
+          <li>Preview storyboard trước khi sinh</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 03</span>
+          <span class="module-tag">Generation Core</span>
+        </div>
+        <h3>Multi-Model <em>Video Engine</em></h3>
+        <p class="module-lead">
+          Smart routing giữa các model AI hàng đầu — chất lượng cao cho cảnh chủ đạo, tốc độ cao cho draft.
+        </p>
+        <ul class="module-features">
+          <li>Tích hợp Veo 3.1, Kling 3.0, Sora 2 Pro, Seedance 2.0</li>
+          <li>Auto-route theo cost & complexity</li>
+          <li>Text-to-video & Image-to-video</li>
+          <li>Resolution 720p / 1080p / 4K</li>
+          <li>Aspect 9:16, 1:1, 16:9 tự điều chỉnh</li>
+          <li>Auto-retry khi generation fail</li>
+          <li>Quality tiers: draft / preview / final</li>
+          <li>Render queue song song, priority lane</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 04</span>
+          <span class="module-tag">Audio Stack</span>
+        </div>
+        <h3>Giọng nói <em>& Âm thanh</em></h3>
+        <p class="module-lead">
+          Lồng tiếng tiếng Việt tự nhiên, voice clone, BGM auto-match, sound design hoàn chỉnh.
+        </p>
+        <ul class="module-features">
+          <li>TTS tiếng Việt: Bắc · Trung · Nam</li>
+          <li>Voice cloning từ 30 giây mẫu</li>
+          <li>Đa nhân vật trong cùng tập với lip-sync</li>
+          <li>BGM auto-match theo mood cảnh</li>
+          <li>Thư viện SFX phân loại theo cảnh</li>
+          <li>Audio mastering (loudness, EQ tự động)</li>
+          <li>Ducking BGM theo dialogue</li>
+          <li>Hỗ trợ giọng cảm xúc: thì thầm, nhấn mạnh, cười</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 05</span>
+          <span class="module-tag">Post-Production</span>
+        </div>
+        <h3>Dựng phim <em>tự động</em></h3>
+        <p class="module-lead">
+          Cắt dựng theo nhịp, caption thông minh, branding, thumbnail — không cần mở editor.
+        </p>
+        <ul class="module-features">
+          <li>Auto-cut theo beat nhạc</li>
+          <li>Subtitle Việt với typography preset</li>
+          <li>Hook builder cho 3 giây đầu</li>
+          <li>Thư viện transition điện ảnh</li>
+          <li>Watermark & logo tự động</li>
+          <li>Color grading presets (LUTs)</li>
+          <li>Auto thumbnail generator (A/B variants)</li>
+          <li>End-card với CTA cho tập tiếp theo</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 06</span>
+          <span class="module-tag">Distribution</span>
+        </div>
+        <h3>Phân phối <em>đa kênh</em></h3>
+        <p class="module-lead">
+          Đăng và phân phối thông minh trên Facebook và các kênh ngắn khác.
+        </p>
+        <ul class="module-features">
+          <li>Facebook Pages / Reels / Groups API</li>
+          <li>Quản lý nhiều Page / nhiều tài khoản</li>
+          <li>Lịch đăng AI theo best-time-to-post</li>
+          <li>Cross-post TikTok, YouTube Shorts, IG Reels</li>
+          <li>Auto caption, hashtag, pinned comment</li>
+          <li>Lịch theo tuần / theo series</li>
+          <li>Re-post & repurpose content cũ</li>
+          <li>Audit log mọi hành động đăng tải</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 07</span>
+          <span class="module-tag">Analytics</span>
+        </div>
+        <h3>Phân tích <em>& Tối ưu</em></h3>
+        <p class="module-lead">
+          Feedback loop từ hiệu quả thực tế ngược về sáng tạo — biến dữ liệu thành tập phim tiếp theo.
+        </p>
+        <ul class="module-features">
+          <li>Dashboard view, reach, engagement real-time</li>
+          <li>Retention curve theo từng giây</li>
+          <li>A/B test hook, thumbnail, caption</li>
+          <li>Phân tích sentiment comment tiếng Việt</li>
+          <li>Trend radar: chủ đề đang viral</li>
+          <li>Gợi ý kịch bản tập sau từ data</li>
+          <li>Report tuần / tháng tự động</li>
+          <li>Benchmark theo kênh / thị trường</li>
+        </ul>
+      </div>
+
+      <div class="module">
+        <div class="module-head">
+          <span class="module-no">MODULE — 08</span>
+          <span class="module-tag">Workflow</span>
+        </div>
+        <h3>Series <em>& Workspace</em></h3>
+        <p class="module-lead">
+          Quản lý nhiều series song song, team cộng tác, template, và pipeline có thể tùy biến.
+        </p>
+        <ul class="module-features">
+          <li>Series workspace tách biệt</li>
+          <li>Pipeline kanban từng tập</li>
+          <li>Roles & approval flow cho team</li>
+          <li>Template library tái sử dụng</li>
+          <li>Bulk queue: chạy 10+ tập một lần</li>
+          <li>Version history & rollback</li>
+          <li>Comment & annotation trên timeline</li>
+          <li>Export gói tập về cho khách</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERIES SPOTLIGHT ================= -->
+<section class="series-spotlight" id="series">
+  <div class="container">
+    <div class="series-inner">
+      <div class="series-text">
+        <div class="section-num">05 — Spotlight</div>
+        <h2>Engine cho phim <em>nhiều tập</em>.</h2>
+        <p class="lead">
+          Hầu hết các tool AI hiện nay sinh ra video độc lập, không có ký ức.
+          Reelcraft được kiến trúc xoay quanh khái niệm <strong style="color: var(--ink-100); font-weight: 500;">Series</strong> —
+          mỗi kênh là một vũ trụ riêng, với nhân vật, bối cảnh, motif, và phong cách hình ảnh
+          được lưu trữ và tự áp dụng cho từng tập mới.
+        </p>
+
+        <div class="bullet-row">
+          <div class="bullet">
+            <h6>Series Bible</h6>
+            <p>Profile nhân vật, mối quan hệ, motif chủ đạo được AI tham chiếu mỗi khi viết tập mới.</p>
+          </div>
+          <div class="bullet">
+            <h6>Character Vault</h6>
+            <p>Embedding hình ảnh nhân vật, đảm bảo gương mặt và phong cách nhất quán qua các tập.</p>
+          </div>
+          <div class="bullet">
+            <h6>Episode Planner</h6>
+            <p>Lập outline cả mùa phim một lần, AI gợi ý điểm cao trào & cliffhanger giữa các tập.</p>
+          </div>
+          <div class="bullet">
+            <h6>Auto Release Cadence</h6>
+            <p>Đặt nhịp đăng (3 tập/tuần), hệ thống tự cân nội dung trong queue cho cả tháng.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="episodes-mock">
+        <div class="ep-header">
+          <h6>Series · "Chuyện Phố Cổ"</h6>
+          <span class="ep-status">SEASON 01 · 12 EP</span>
+        </div>
+        <div class="ep-list">
+          <div class="ep-row published">
+            <div class="ep-num">01</div>
+            <div>
+              <div class="ep-title">Người khách lạ ở số 17</div>
+              <div class="ep-meta">9:16 · 1080p · 1:14</div>
+            </div>
+            <div class="ep-meta">142K views</div>
+            <div class="ep-state">Đã đăng</div>
+          </div>
+          <div class="ep-row published">
+            <div class="ep-num">02</div>
+            <div>
+              <div class="ep-title">Bức thư trong ngăn kéo gỗ</div>
+              <div class="ep-meta">9:16 · 1080p · 1:08</div>
+            </div>
+            <div class="ep-meta">98K views</div>
+            <div class="ep-state">Đã đăng</div>
+          </div>
+          <div class="ep-row published">
+            <div class="ep-num">03</div>
+            <div>
+              <div class="ep-title">Đêm mưa và cái ô màu đỏ</div>
+              <div class="ep-meta">9:16 · 1080p · 1:22</div>
+            </div>
+            <div class="ep-meta">210K views</div>
+            <div class="ep-state">Đã đăng</div>
+          </div>
+          <div class="ep-row processing">
+            <div class="ep-num">04</div>
+            <div>
+              <div class="ep-title">Tiếng dương cầm từ tầng ba</div>
+              <div class="ep-meta">9:16 · 1080p · 1:18</div>
+            </div>
+            <div class="ep-meta">Render 67%</div>
+            <div class="ep-state">Đang xử lý</div>
+          </div>
+          <div class="ep-row queue">
+            <div class="ep-num">05</div>
+            <div>
+              <div class="ep-title">Người đàn ông không có bóng</div>
+              <div class="ep-meta">9:16 · 1080p · ~1:15</div>
+            </div>
+            <div class="ep-meta">Lên lịch T5</div>
+            <div class="ep-state">Hàng đợi</div>
+          </div>
+          <div class="ep-row queue">
+            <div class="ep-num">06</div>
+            <div>
+              <div class="ep-title">Tấm gương soi không đúng mặt</div>
+              <div class="ep-meta">9:16 · 1080p · ~1:20</div>
+            </div>
+            <div class="ep-meta">Lên lịch T7</div>
+            <div class="ep-state">Hàng đợi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DISTRIBUTION ================= -->
+<section class="distribution" id="distribution">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">06 — Distribution</div>
+      <h2>Đến tay khán giả <em>đúng nền tảng, đúng giờ</em>.</h2>
+      <p class="lead">
+        Một video được sản xuất một lần, phân phối lại theo định dạng tối ưu cho từng kênh.
+        Reelcraft xử lý phần "phân phối thông minh" để mỗi tập phim sống dài nhất có thể.
+      </p>
+    </div>
+
+    <div class="dist-layout">
+      <div>
+        <h3 style="font-size: 32px; font-weight: 300; margin-bottom: 24px;">Tích hợp <em style="color: var(--gold); font-style: italic;">native</em> với hệ sinh thái Facebook.</h3>
+        <p style="color: var(--ink-60); font-size: 15px; line-height: 1.7;">
+          Đăng trực tiếp qua Graph API chính thức của Meta — không phải script auto trình duyệt,
+          không có rủi ro bị giới hạn tài khoản. Hệ thống có thể quản lý đồng thời nhiều Page
+          và nhiều ngách nội dung, với audit log đầy đủ cho từng hành động đăng tải.
+        </p>
+        <p style="color: var(--ink-60); font-size: 15px; line-height: 1.7; margin-top: 16px;">
+          Cùng với đó là khả năng cross-post sang TikTok, YouTube Shorts, và Instagram Reels —
+          mỗi video tự động được điều chỉnh aspect ratio, captions, và hashtag phù hợp với platform.
+        </p>
+      </div>
+
+      <div class="dist-channels">
+        <div class="channel">
+          <div class="channel-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="channel-name">Facebook Pages & Reels</div>
+            <div class="channel-desc">Graph API official · multi-Page · scheduling AI</div>
+          </div>
+          <div class="channel-stat">Native</div>
+        </div>
+        <div class="channel">
+          <div class="channel-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/><path d="M8 9c2-1 5 1 5 4v6M13 4c1 2 4 2 6 2v3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="channel-name">TikTok</div>
+            <div class="channel-desc">Cross-post · auto hashtag · trend matching</div>
+          </div>
+          <div class="channel-stat">Beta</div>
+        </div>
+        <div class="channel">
+          <div class="channel-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="5" width="18" height="14" rx="3"/><polygon points="10,9 16,12 10,15"/>
+            </svg>
+          </div>
+          <div>
+            <div class="channel-name">YouTube Shorts</div>
+            <div class="channel-desc">Auto-title SEO · description từ kịch bản</div>
+          </div>
+          <div class="channel-stat">Native</div>
+        </div>
+        <div class="channel">
+          <div class="channel-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div>
+            <div class="channel-name">Instagram Reels</div>
+            <div class="channel-desc">9:16 native · auto-cover · grid styling</div>
+          </div>
+          <div class="channel-stat">Native</div>
+        </div>
+        <div class="channel">
+          <div class="channel-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 5l9 7l9-7"/><rect x="3" y="5" width="18" height="14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="channel-name">Webhook / API Export</div>
+            <div class="channel-desc">Đẩy ra hệ thống nội bộ, MMP, hoặc CMS riêng</div>
+          </div>
+          <div class="channel-stat">Open</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= USE CASES ================= -->
+<section class="usecases">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">07 — Use Cases</div>
+      <h2>Một nền tảng, <em>nhiều mô hình kinh doanh</em>.</h2>
+      <p class="lead">
+        Reelcraft phù hợp với mọi đơn vị cần khối lượng nội dung video ngắn ổn định —
+        từ creator cá nhân vận hành kênh kiếm tiền view, đến agency phục vụ hàng chục thương hiệu.
+      </p>
+    </div>
+
+    <div class="case-grid">
+      <div class="case-card">
+        <div class="case-cat">Creator / MMO</div>
+        <h4>Vận hành chuỗi kênh phim ngắn kiếm view & monetization Facebook</h4>
+        <p>Một người vận hành 5–10 Page, mỗi Page một ngách (drama, kinh dị, tâm lý). Reelcraft sản xuất 30+ tập mỗi tuần, đăng tự động theo lịch đã tối ưu.</p>
+        <div class="case-stat">
+          <span class="label">Hiệu suất</span>
+          <span class="val">×8 throughput</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-cat">Agency / Production</div>
+        <h4>Phục vụ nhiều khách hàng với pipeline tách biệt theo brand</h4>
+        <p>Mỗi khách hàng có Series Bible riêng, character vault riêng, theme riêng. Đội ngũ chuyển từ "thực thi thủ công" sang "giám sát chất lượng".</p>
+        <div class="case-stat">
+          <span class="label">Tỷ lệ giao việc</span>
+          <span class="val">×5 client/người</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-cat">Brand & D2C</div>
+        <h4>Sản xuất chuỗi storytelling cho thương hiệu</h4>
+        <p>Sản phẩm hay dịch vụ được kể qua chuỗi phim ngắn dài hạn — nhân vật của thương hiệu xuất hiện đều đặn, xây dựng cảm xúc thay vì chỉ chạy ads.</p>
+        <div class="case-stat">
+          <span class="label">Chi phí biên</span>
+          <span class="val">−85% / video</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-cat">EdTech & Khóa học</div>
+        <h4>Biến bài giảng thành chuỗi micro-content viral</h4>
+        <p>Một chương sách thành 20 tập Reels có nhân vật minh họa, kịch bản truyền cảm hứng. Reelcraft xử lý từ chương trình đến lịch đăng trên Facebook.</p>
+        <div class="case-stat">
+          <span class="label">Tốc độ ra mắt</span>
+          <span class="val">×10 nhanh hơn</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-cat">Báo chí & Media</div>
+        <h4>Phim hóa tin tức và bài viết dài thành Reels</h4>
+        <p>Bài báo điều tra dài thành chuỗi 3 tập video ngắn dạng phim tài liệu mini. Cùng một newsroom, gấp 3 lần đầu ra video.</p>
+        <div class="case-stat">
+          <span class="label">Tái sử dụng</span>
+          <span class="val">×3 reach/bài</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-cat">Mạng lưới Page (Network)</div>
+        <h4>Quản lý hàng trăm Page Facebook với pipeline trung tâm</h4>
+        <p>Đội ngũ trung tâm tạo template & series, từng Page nhánh tự kế thừa và tự đăng. Khả năng scale như một "phim trường công nghiệp".</p>
+        <div class="case-stat">
+          <span class="label">Quy mô vận hành</span>
+          <span class="val">100+ Pages</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section class="architecture" id="architecture">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">08 — Architecture</div>
+      <h2>Nền tảng kỹ thuật <em>vận hành 24/7</em>.</h2>
+      <p class="lead">
+        Kiến trúc microservice multi-tenant, sẵn sàng mở rộng từ 1 người dùng tới hàng chục nghìn,
+        với khả năng tự host hoặc triển khai trên hạ tầng cloud tùy chọn của khách hàng.
+      </p>
+    </div>
+
+    <div class="arch-stack">
+
+      <div class="arch-layer">
+        <div class="layer-no">L1</div>
+        <div>
+          <div class="layer-sub">Presentation Layer</div>
+          <h4>Studio Workspace</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Giao diện web responsive (Next.js + React) cho người sáng tạo. Timeline drag-and-drop, preview real-time,
+            collaborative editing đa người. Mobile app companion để duyệt và phê duyệt khi di chuyển.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Next.js 15</span>
+            <span class="tech-tag">React 19</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">Tailwind</span>
+            <span class="tech-tag">Tauri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L2</div>
+        <div>
+          <div class="layer-sub">Orchestration</div>
+          <h4>Pipeline Engine</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            DAG orchestrator điều phối toàn bộ vòng đời một tập phim — từ kịch bản → render → mastering → publish.
+            Auto-retry, parallel execution, cost-aware routing giữa các model AI.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Temporal</span>
+            <span class="tech-tag">BullMQ</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag accent">Custom DAG</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L3</div>
+        <div>
+          <div class="layer-sub">AI Inference</div>
+          <h4>Multi-Model Gateway</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Lớp abstraction phía trước các provider sinh video, hình ảnh, giọng nói. Smart routing theo chi phí,
+            chất lượng, độ tin cậy. Fallback tự động khi provider quá tải hoặc rate-limited.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag accent">Veo 3.1</span>
+            <span class="tech-tag accent">Kling 3.0</span>
+            <span class="tech-tag accent">Sora 2 Pro</span>
+            <span class="tech-tag accent">Seedance 2.0</span>
+            <span class="tech-tag">Claude / GPT-4</span>
+            <span class="tech-tag">ElevenLabs · VBee</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L4</div>
+        <div>
+          <div class="layer-sub">Media Processing</div>
+          <h4>Render Farm</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Worker pool xử lý ffmpeg, gắn subtitle, master audio, tạo thumbnail. GPU optional cho upscaling và
+            advanced color grading. Tự co giãn theo workload, hỗ trợ priority queue.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">FFmpeg</span>
+            <span class="tech-tag">NVIDIA NVENC</span>
+            <span class="tech-tag">Whisper.cpp</span>
+            <span class="tech-tag">K8s HPA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L5</div>
+        <div>
+          <div class="layer-sub">Data & State</div>
+          <h4>Series Memory</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Series Bible, Character Vault, asset library lưu trữ ở dạng có cấu trúc + vector embedding để truy xuất ngữ nghĩa.
+            Versioning, snapshot, rollback cho mọi loại tài sản sáng tạo.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">PostgreSQL</span>
+            <span class="tech-tag">pgvector</span>
+            <span class="tech-tag">Redis</span>
+            <span class="tech-tag">MinIO / S3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L6</div>
+        <div>
+          <div class="layer-sub">Distribution</div>
+          <h4>Publisher Bus</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Adapter cho từng nền tảng phân phối với chuẩn API native. Quota management, rate-limit aware,
+            retry với exponential backoff. Audit log đầy đủ.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag accent">Meta Graph API</span>
+            <span class="tech-tag accent">TikTok API</span>
+            <span class="tech-tag accent">YouTube Data v3</span>
+            <span class="tech-tag">Webhook</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="layer-no">L7</div>
+        <div>
+          <div class="layer-sub">Observability</div>
+          <h4>Analytics & Feedback</h4>
+        </div>
+        <div>
+          <div class="layer-desc">
+            Thu thập số liệu hiệu suất từ các platform, đối chiếu với metadata tập phim, đưa ra insight và
+            đề xuất tự động. Dashboard real-time, export báo cáo định kỳ.
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">ClickHouse</span>
+            <span class="tech-tag">Grafana</span>
+            <span class="tech-tag">OpenTelemetry</span>
+            <span class="tech-tag accent">Custom ML signals</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= DELIVERABLES ================= -->
+<section class="deliverables">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-num">09 — Phạm vi bàn giao</div>
+      <h2>Những gì <em>khách hàng nhận được</em>.</h2>
+      <p class="lead">
+        Một sản phẩm hoàn chỉnh, sẵn sàng vận hành, kèm tài liệu, training và hỗ trợ.
+      </p>
+    </div>
+
+    <div class="deliv-row">
+      <div class="deliv-no">i</div>
+      <div>
+        <h4>Sản phẩm hoàn chỉnh, đã triển khai</h4>
+        <p>
+          Toàn bộ hệ thống Reelcraft được triển khai trên hạ tầng của khách hàng (cloud riêng) hoặc dưới dạng
+          SaaS quản lý. Cấu hình môi trường production, staging, môi trường dev được chuẩn hóa và tài liệu hóa đầy đủ.
+          Tích hợp sẵn với các tài khoản Facebook Pages, TikTok, YouTube của khách.
+        </p>
+      </div>
+    </div>
+
+    <div class="deliv-row">
+      <div class="deliv-no">ii</div>
+      <div>
+        <h4>Series Bible & Template khởi tạo</h4>
+        <p>
+          Một bộ template kịch bản cho 3–5 ngách phim ngắn phổ biến (drama tâm lý, tâm linh nhẹ, đời thường,
+          động viên tinh thần), một thư viện character pre-built, BGM library với hơn 200 track đã được phân loại theo mood.
+          Đủ để khách hàng vận hành sản xuất từ ngày đầu tiên.
+        </p>
+      </div>
+    </div>
+
+    <div class="deliv-row">
+      <div class="deliv-no">iii</div>
+      <div>
+        <h4>Đào tạo và chuyển giao vận hành</h4>
+        <p>
+          Chương trình đào tạo 2 buổi cho đội ngũ sáng tạo (cách viết prompt, cách dùng Series Bible)
+          và 1 buổi cho đội kỹ thuật (vận hành hệ thống, theo dõi log, xử lý sự cố cơ bản).
+          Kèm video hướng dẫn nội bộ và playbook quy trình.
+        </p>
+      </div>
+    </div>
+
+    <div class="deliv-row">
+      <div class="deliv-no">iv</div>
+      <div>
+        <h4>Tài liệu kỹ thuật & API</h4>
+        <p>
+          Tài liệu kiến trúc, API reference cho từng module, hướng dẫn mở rộng (thêm nguồn TTS mới, thêm model video,
+          thêm kênh phân phối). Cho phép đội kỹ thuật của khách hàng tự phát triển tiếp mà không bị khóa chân vào vendor.
+        </p>
+      </div>
+    </div>
+
+    <div class="deliv-row">
+      <div class="deliv-no">v</div>
+      <div>
+        <h4>Hỗ trợ & bảo trì sau triển khai</h4>
+        <p>
+          Thời gian hỗ trợ kỹ thuật theo SLA, cập nhật model AI mới khi có phiên bản tốt hơn,
+          theo dõi và tối ưu chi phí inference theo từng tháng. Một hợp tác liên tục, không chỉ là một dự án bán-xong-là-xong.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="closing">
+  <div class="container">
+    <h2>Sản xuất một tập phim<br/>như viết một <em>dòng tweet</em>.</h2>
+    <p class="closing-lead">
+      Reelcraft không thay thế người làm sáng tạo. Nó thay thế <em>khoảng cách</em> giữa
+      ý tưởng và lượt view đầu tiên — phần khoảng cách đáng nhẽ ra không nên tồn tại.
+    </p>
+
+    <div class="closing-sig">
+      <div class="sig-block">
+        <div class="label">Document</div>
+        <div class="val">Reelcraft Product Proposal · v1.0</div>
+      </div>
+      <div class="sig-block">
+        <div class="label">Prepared by</div>
+        <div class="val">VinMotion AI Engineering</div>
+      </div>
+      <div class="sig-block">
+        <div class="label">Status</div>
+        <div class="val">Confidential · For Review</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <span>© 2026 · Reelcraft Studio · A Production-Grade AI Filmmaking Stack</span>
+  <span>Built for the speed of social</span>
+</footer>
+
+</body>
+</html>
